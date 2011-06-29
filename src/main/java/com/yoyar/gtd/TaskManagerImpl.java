@@ -28,6 +28,11 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public Task add(Task parent, Task task) {
+		
+		if( parent.getEntityId() == null) {
+			throw new IllegalArgumentException("The parent task id must not be null");
+		}
+		
 		throw new NotImplementedException();
 	}
 

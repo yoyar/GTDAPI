@@ -30,8 +30,6 @@ class TaskRepositoryImpl implements TaskRepository {
 	}
 
 	public Task addOrUpdate(Task task) {
-
-		Long taskid = null;
 		
 		String dueDateString = null;
 		
@@ -45,8 +43,7 @@ class TaskRepositoryImpl implements TaskRepository {
 		
 		if( null == task.getEntityId()) {
 			/* this is an insert, so we need to generate an id */
-			taskid = incrementer.nextLongValue();
-			task.setEntityId(taskid);
+			task.setEntityId(incrementer.nextLongValue());
 			
 			sql = "insert into Task (id, title, dueDate, priority) "
 				+ "values (:id, :title, :dueDate, :priority)";

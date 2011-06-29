@@ -1,10 +1,12 @@
 package com.yoyar.gtd;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -48,6 +50,60 @@ public class TaskManagerTests {
 		taskManager.deleteAll();
 	}
 	
+	@Test(expected=IllegalArgumentException.class) 
+	public void testAddSubTaskToParentWhenParentIdIsNull() {
+		
+		String parentTaskTitle = "parent task title";
+		String subTaskTitle = "sub task title";
+		
+		Task parentTask = taskFactory.makeTask(parentTaskTitle);
+		
+		assertNull(parentTask.getEntityId());
+		
+		Task subTask = taskFactory.makeTask(subTaskTitle);
+		
+		taskManager.add(parentTask, subTask);
+		
+	}
+	
+	
+	@Test
+	public void testAddSubTaskToParentTask() {
+		
+		String parentTaskTitle = "parent task title";
+		String subTaskTitle = "sub task title";
+		
+		Task parentTask = taskFactory.makeTask(parentTaskTitle);
+		
+		taskManager.add(parentTask);
+		
+		assertNotNull(parentTask.getEntityId());
+		
+		long originalParentTaskID = parentTask.getEntityId();
+		
+		Task subTask = taskFactory.makeTask(subTaskTitle);
+		
+		taskManager.add(parentTask, subTask);
+		
+		assertNotNull(subTask.getEntityId());
+		
+		long originalSubTaskID = subTask.getEntityId();
+		
+		Task parentFromDb = taskManager.get(originalParentTaskID);
+		
+		// TODO change return values from List<Task> to Collection<Task>. OR NOT! List is better.
+		
+		List<Task> subTasks = parentFromDb.getTasks();
+		
+		// there is only one subTask so it must be at idx zero
+		Task subTaskFromDB = subTasks.get(0);
+		
+		assertTrue(subTasks.contains(subTask));
+		assertEquals(originalParentTaskID, (long)parentFromDb.getEntityId());
+		assertEquals(originalSubTaskID, (long)subTaskFromDB.getEntityId());		
+		assertEquals(parentTaskTitle, parentFromDb.getTitle());
+		assertEquals(subTaskTitle, subTaskFromDB.getTitle());
+	}
 	
 	
 	@Test
