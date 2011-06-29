@@ -20,39 +20,6 @@ class TaskImpl implements Task {
 
 	public TaskImpl() {
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		
-		// TODO: refine this equals method.
-		
-		if( this == obj) return true;
-		if((obj == null) || (obj.getClass() != this.getClass())) return false;
-		
-		Task other = (Task) obj;
-		
-		Calendar thisDueDate = Calendar.getInstance();
-		Calendar otherDueDate = Calendar.getInstance();
-		thisDueDate.setTime(this.getDueDate());
-		otherDueDate.setTime(other.getDueDate());
-		
-		return this.getTitle().equals(other.getTitle())
-			&& thisDueDate.get(Calendar.YEAR) == otherDueDate.get(Calendar.YEAR)
-			&& thisDueDate.get(Calendar.MONTH) == otherDueDate.get(Calendar.MONTH)
-			&& thisDueDate.get(Calendar.DAY_OF_MONTH) == otherDueDate.get(Calendar.DAY_OF_MONTH)
-			&& thisDueDate.get(Calendar.HOUR_OF_DAY) == otherDueDate.get(Calendar.HOUR_OF_DAY)
-			&& thisDueDate.get(Calendar.MINUTE) == otherDueDate.get(Calendar.MINUTE)
-			&& thisDueDate.get(Calendar.SECOND) == otherDueDate.get(Calendar.SECOND)
-		;
-	}
-	
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 31 * hash + getTitle().hashCode();		
-		hash = 31 * hash + (null == getDueDate() ? 0 : getDueDate().hashCode());		
-		return hash;
-	}
 	
 	public void addTask(Task task) {
 		this.tasks.add(task);
@@ -127,5 +94,26 @@ class TaskImpl implements Task {
 		
 		return sb.toString();
 	}
-
+	
+	/**
+	 * A Task equals another Task when the titles are equal.
+	 * 
+	 * @param obj
+	 * @return boolean
+	 */
+	@Override
+	public boolean equals(Object obj) {
+				
+		if( this == obj) return true;
+		if((obj == null) || (obj.getClass() != this.getClass())) return false;
+		Task other = (Task) obj;
+		return this.getTitle().equals(other.getTitle());
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 31 * hash + getTitle().hashCode();		
+		return hash;
+	}
 }
