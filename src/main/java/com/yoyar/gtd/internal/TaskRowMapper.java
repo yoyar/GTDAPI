@@ -32,6 +32,7 @@ class TaskRowMapper implements RowMapper<Task> {
 
 		Task task = taskFactory.makeTask(rs.getString("title"));
 		task.setEntityId(rs.getLong("id"));
+		task.setParentId((Long)rs.getObject("parentid"));
 		task.setDueDate(dueDate);
 		task.setPriority(Priority.valueOf(rs.getString("priority")));
 

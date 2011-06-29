@@ -1,6 +1,6 @@
 package com.yoyar.gtd;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,7 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public Task add(Task task) {
-		if( task.getPriority() == null) {
-			task.setPriority(Priority.DD_LOW);
-		}
+		
 		return taskRepository.addOrUpdate(task);
 
 	}
@@ -30,10 +28,13 @@ public class TaskManagerImpl implements TaskManager {
 	public Task add(Task parent, Task task) {
 		
 		if( parent.getEntityId() == null) {
-			throw new IllegalArgumentException("The parent task id must not be null");
+			throw new IllegalArgumentException("The parent task's id must not be null");
 		}
 		
-		throw new NotImplementedException();
+		task.setParentId(parent.getEntityId());
+		
+		return taskRepository.addOrUpdate(task);
+		
 	}
 
 	@Override
@@ -44,6 +45,7 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public void deleteAll() {
+		// TODO: with sub tasks this likely needs to delete recursively, starting first with leaf nodes.
 		taskRepository.deleteAll();
 	}
 
@@ -53,7 +55,12 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public Collection<Task> getTopLevelTasks() {
+	public List<Task> getTopLevelTasks() {
 		return taskRepository.getTopLevelTasks();
+	}
+
+	@Override
+	public List<Task> getTasks(Task parentTask) {
+		return taskRepository.getTasks(parentTask);
 	}
 }

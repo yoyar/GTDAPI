@@ -45,23 +45,34 @@ class TaskRepositoryImpl implements TaskRepository {
 			/* this is an insert, so we need to generate an id */
 			task.setEntityId(incrementer.nextLongValue());
 			
-			sql = "insert into Task (id, title, dueDate, priority) "
-				+ "values (:id, :title, :dueDate, :priority)";
+			sql = "insert into Task (id, parentid, title, dueDate, priority) "
+				+ "values (:id, :parentid, :title, :dueDate, :priority)";
 		} else {
 			// update
 			sql = "update Task " +
 					" set title = :title," +
+					" parentid = :parentid," +
 					" dueDate = :dueDate," +
 					" priority = :priority" +
 					" where id = :id";
 		} // fi
 		
+		if( task.getPriority() == null) {
+			task.setPriority(Priority.DD_LOW);
+		}
+		
+		//System.out.println("Parent id: " + task.getParentId());
+			
+		if( null != task.getParentId()) {
+			System.out.println("addOrUpdate Parent ID: " + task.getParentId());
+		}
 		
 		SqlParameterSource namedParameters = new MapSqlParameterSource()
 				.addValue("id", task.getEntityId())
 				.addValue("title", task.getTitle())
 				.addValue("dueDate", dueDateString)
 				.addValue("priority", task.getPriority().toString())
+				.addValue("parentid", task.getParentId())
 				;
 
 		jdbcParamTemplate.update(sql, namedParameters);
@@ -98,7 +109,12 @@ class TaskRepositoryImpl implements TaskRepository {
 
 	@Override
 	public void deleteAll() {
-		jdbcTemplate.execute("delete from Task");
+		
+		/* 
+		 * Note: in the database schema: delete is set to cascade so all tasks 
+		 * should get deleted, even though I'm only explicitly deleting the parent tasks.
+		 */
+		jdbcTemplate.execute("delete from Task where parentid is null");
 	}
 
 	@Override
@@ -111,10 +127,22 @@ class TaskRepositoryImpl implements TaskRepository {
 	
 	@Override
 	public List<Task> getTopLevelTasks() {
-		
 		String sql = "select * from Task where parentid is null";
-		
 		return jdbcTemplate.query(sql, taskRowMapper);
+	}
+
+	@Override
+	public List<Task> getTasks(Task parentTask) {
+		
+		// TODO: looks like getTopLevelTasks and thsi method have duplications (refactor)
+		
+		String sql = "select * from Task where parentid = :parentid";
+		
+		SqlParameterSource namedParameters = new MapSqlParameterSource()
+			.addValue("parentid", parentTask.getEntityId())
+		;
+		
+		return jdbcParamTemplate.query(sql, namedParameters, taskRowMapper);
 	}
 
 }

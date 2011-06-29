@@ -1,12 +1,23 @@
 package com.yoyar.gtd.internal;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 class TaskImpl implements Task {
 
 	private Long id = null;
+
+	private Long parentid = null;
+	
+	@Override
+	public Long getParentId() {
+		return parentid;
+	}
+
+	@Override
+	public void setParentId(Long parentid) {
+		this.parentid = parentid;
+	}
 
 	private List<Task> tasks;
 
@@ -33,13 +44,13 @@ class TaskImpl implements Task {
 		this.id = id;
 	}
 
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
+//	public List<Task> getTasks() {
+//		return tasks;
+//	}
+//
+//	public void setTasks(List<Task> tasks) {
+//		this.tasks = tasks;
+//	}
 
 	public String getTitle() {
 		return title;

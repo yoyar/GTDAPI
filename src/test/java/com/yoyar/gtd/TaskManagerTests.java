@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -41,7 +42,7 @@ public class TaskManagerTests {
 		Collection<Task> tasks = taskManager.getTopLevelTasks();
 		
 		for( Task task : tasks) {
-			System.out.println(task);
+			//System.out.println(task);
 		}
 	}
 
@@ -89,22 +90,62 @@ public class TaskManagerTests {
 		
 		long originalSubTaskID = subTask.getEntityId();
 		
-		Task parentFromDb = taskManager.get(originalParentTaskID);
+		Task parentTaskFromDb = taskManager.get(originalParentTaskID);
 		
-		// TODO change return values from List<Task> to Collection<Task>. OR NOT! List is better.
-		
-		List<Task> subTasks = parentFromDb.getTasks();
+		List<Task> subTasks = taskManager.getTasks(parentTaskFromDb);
 		
 		// there is only one subTask so it must be at idx zero
 		Task subTaskFromDB = subTasks.get(0);
 		
 		assertTrue(subTasks.contains(subTask));
-		assertEquals(originalParentTaskID, (long)parentFromDb.getEntityId());
+		assertEquals(originalParentTaskID, (long)parentTaskFromDb.getEntityId());
 		assertEquals(originalSubTaskID, (long)subTaskFromDB.getEntityId());		
-		assertEquals(parentTaskTitle, parentFromDb.getTitle());
+		assertEquals(parentTaskTitle, parentTaskFromDb.getTitle());
 		assertEquals(subTaskTitle, subTaskFromDB.getTitle());
 	}
 	
+	@Test 
+	public void deleteAllIncludingTasksThatHaveSubTasks() {
+		Task parent = taskFactory.makeTask("parent");
+		Task subtask = taskFactory.makeTask("sub task");
+		
+		taskManager.add(parent);
+		taskManager.add(parent, subtask);
+		
+		Task parentFromDB = taskManager.get(parent.getEntityId());
+		Task subtaskFromDB = taskManager.get(subtask.getEntityId());
+				
+		assertNotNull(parent.getEntityId());
+		assertNull(parent.getParentId());
+		
+		assertNotNull(subtask.getEntityId());
+		assertNotNull(subtask.getParentId());
+		
+		assertEquals(parent.getEntityId(), subtask.getParentId());
+		
+		assertNotNull(parentFromDB.getEntityId());
+		
+		assertNull(parentFromDB.getParentId());
+		
+		assertNotNull(subtaskFromDB.getEntityId());
+		assertNotNull(subtaskFromDB.getParentId());
+		
+		assertEquals(parentFromDB.getEntityId(), subtaskFromDB.getParentId());
+		
+		taskManager.deleteAll();
+		
+		assertNull(taskManager.get(parent.getEntityId()));
+		assertNull(taskManager.get(subtask.getEntityId()));
+		
+		// try to find any task at all
+		String sql = "select count(*) as numResults from Task";
+		int count = jdbcTemplate.queryForInt(sql);
+		assertEquals(0, count);
+		
+	}
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	@Test
 	public void testUpdateTask() {

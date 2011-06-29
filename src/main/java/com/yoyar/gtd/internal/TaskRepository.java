@@ -17,4 +17,12 @@ public interface TaskRepository {
 	public void deleteAll();
 	
 	public List<Task> getTopLevelTasks();
+	
+	/**
+	 * For the specified parent Task return the list of sub tasks
+	 * 
+	 * @param Task
+	 * @return List&lt;Task&gt;
+	 */
+	public List<Task> getTasks(Task parentTask);
 }

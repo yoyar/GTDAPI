@@ -1,6 +1,6 @@
 package com.yoyar.gtd;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.yoyar.gtd.internal.Task;
 
@@ -16,10 +16,12 @@ public interface TaskManager {
 
 	public Task update(Task task);
 	
-	public Collection<Task> getTopLevelTasks();
+	public List<Task> getTopLevelTasks();
+	
+	public List<Task> getTasks(Task parentTask);
 	
 	/**
-	 * Add a Task to the ParentTask and return just added Task
+	 * Add a newly created Task to the ParentTask and return just added Task
 	 * 
 	 * @param Task
 	 *            parent

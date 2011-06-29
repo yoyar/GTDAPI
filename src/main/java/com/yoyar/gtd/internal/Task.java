@@ -8,14 +8,20 @@ public interface Task {
 	public Long getEntityId();
 
 	public void setEntityId(long id);
+	
+	public void setParentId(Long id);
+	
+	public Long getParentId();
 
 	public boolean contains(Task task);
 
 	public void addTask(Task task);
 
+	/*
 	public List<Task> getTasks();
 
 	public void setTasks(List<Task> tasks);
+	*/
 
 	public String getTitle();
 
