@@ -55,7 +55,7 @@ public class TaskManagerTests {
 		
 		long taskid = taskManager.getTopLevelTasks().iterator().next().getEntityId();
 		
-		Task originalTask = taskManager.getTask(taskid);
+		Task originalTask = taskManager.get(taskid);
 		
 		String updatedTitle = "updated title for task 1";
 		Calendar updatedDueDate = Calendar.getInstance();
@@ -66,37 +66,24 @@ public class TaskManagerTests {
 		
 		taskManager.update(originalTask);
 		
-		Task taskFromDbAfterUpdate = taskManager.getTask(taskid);
+		Task taskFromDbAfterUpdate = taskManager.get(taskid);
 		
 		assertEquals(updatedTitle, taskFromDbAfterUpdate.getTitle());
 	}
 
-	@Test
-	public void testMakeTaskWithTitle() {
-
-		String title = "Test Task 1";
-
-		Task task = taskFactory.makeTask(title);
-
-		assertTrue(task instanceof Task);
-		assertEquals(title, task.getTitle());
-
-		Task task2 = taskFactory.makeTask(title);
-		assertTrue(task2 instanceof Task);
-		assertEquals(title, task.getTitle());
-	}
+	
 	
 	@Test 
 	public void testAddTaskWithPriority() {
 		
-		Priority originalPriority = Priority.LOW;
+		Priority originalPriority = Priority.DD_LOW;
 		
 		String title = "test task with priority";
 		Task task = taskFactory.makeTask(title);
 		task.setPriority(originalPriority);
 		taskManager.add(task);
 		
-		Task fromdb = taskManager.getTask(task.getEntityId());
+		Task fromdb = taskManager.get(task.getEntityId());
 		
 		assertEquals(fromdb.getPriority(), originalPriority);
 		
@@ -115,7 +102,7 @@ public class TaskManagerTests {
 
 		taskManager.add(task);
 
-		Task fromDB = taskManager.getTask(task.getEntityId());
+		Task fromDB = taskManager.get(task.getEntityId());
 
 		Calendar calFromDB = Calendar.getInstance();
 		calFromDB.setTime(fromDB.getDueDate());
@@ -142,7 +129,7 @@ public class TaskManagerTests {
 		Task originalTask = taskFactory.makeTask(title);
 		taskManager.add(originalTask);
 
-		Task taskFromDB = taskManager.getTask(originalTask.getEntityId());
+		Task taskFromDB = taskManager.get(originalTask.getEntityId());
 
 		assertEquals(taskFromDB.getTitle(), originalTask.getTitle());
 		assertEquals(taskFromDB.getEntityId(), originalTask.getEntityId());

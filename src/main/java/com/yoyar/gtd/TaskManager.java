@@ -34,7 +34,7 @@ public interface TaskManager {
 	 * 
 	 * @param taskid
 	 */
-	public Task getTask(long taskid);
+	public Task get(long taskid);
 
 	/**
 	 * Delete all tasks in the database. Caution!!!

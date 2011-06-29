@@ -20,7 +20,7 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public Task add(Task task) {
 		if( task.getPriority() == null) {
-			task.setPriority(Priority.UNSET);
+			task.setPriority(Priority.DD_LOW);
 		}
 		return taskRepository.addOrUpdate(task);
 
@@ -32,7 +32,7 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public Task getTask(long taskid) {
+	public Task get(long taskid) {
 		Task task = taskRepository.getTask(taskid);
 		return task;
 	}

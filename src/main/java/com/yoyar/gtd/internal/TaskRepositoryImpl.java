@@ -14,19 +14,6 @@ import org.springframework.jdbc.support.incrementer.DataFieldMaxValueIncrementer
 
 class TaskRepositoryImpl implements TaskRepository {
 
-//	private final class TaskRowMapper implements RowMapper<Task> {
-//		@Override
-//		public Task mapRow(ResultSet rs, int rowNum)
-//				throws SQLException {
-//			
-//			Task task = taskFactory.makeTask();
-//			task.setEntityId(rs.getLong("id"));
-//			task.setDueDate(rs.getDate("dueDate"));
-//			
-//			return task;
-//		}
-//	}
-
 	@Autowired
 	private NamedParameterJdbcOperations jdbcParamTemplate;
 

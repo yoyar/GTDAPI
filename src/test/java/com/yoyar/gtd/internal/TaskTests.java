@@ -1,12 +1,14 @@
 package com.yoyar.gtd.internal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -14,10 +16,28 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration("classpath:com/yoyar/gtd/internal/system-test-config.xml")
 public class TaskTests {
 
+	@Autowired
+	private TaskFactory taskFactory;
+	
 	@Before
 	public void setUp() throws Exception {
 	}
 		
+	@Test
+	public void testMakeTaskWithTitle() {
+
+		String title = "Test Task 1";
+
+		Task task = taskFactory.makeTask(title);
+
+		assertTrue(task instanceof Task);
+		assertEquals(title, task.getTitle());
+
+		Task task2 = taskFactory.makeTask(title);
+		assertTrue(task2 instanceof Task);
+		assertEquals(title, task.getTitle());
+	}
+	
 	@Test
 	public void testEquals() {
 		Task task1 = getTask1();
@@ -52,16 +72,21 @@ public class TaskTests {
 		new BasicTaskFactory().makeTask("");
 	}
 	
-	static Calendar aDueDate = Calendar.getInstance();
+	
+	
+	static final Calendar aDueDate = Calendar.getInstance();
 	
 	static {
 		aDueDate.set(2012, 0, 19, 1, 1, 1);
 	}
 	
-	static String title = "test equals and hash code title";
+	static final String title = "test equals and hash code title";
 	
-	/* task1 and task2 are meant to be different objects, but they should turn
-	 * out to be equal when using equals() and hashCode()
+	/* 
+	 * task1 and task2 are meant to be different objects, but they should turn
+	 * out to be equal when using equals() and hashCode(), They should have the 
+	 * same title and due date for testing purposes. In other words, the 
+	 * properties of each should be equal.
 	 */
 	Task getTask1() {
 		
