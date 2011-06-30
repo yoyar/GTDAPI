@@ -12,11 +12,25 @@ public interface TaskRepository {
 
 	public Task getTask(long taskid);
 
-	public long deleteTask(Task task);
+	/**
+	 * Delete the specified task.
+	 * 
+	 * @param task
+	 * @return long
+	 */
+	public long delete(Task task);
 
-	public void deleteAll();
+	/**
+	 * Delete ALL tasks
+	 */
+	public void delete();
 	
-	public List<Task> getTopLevelTasks();
+	/**
+	 * Returns the top level tasks, that is, all tasks with no parents.
+	 * 
+	 * @return List&lt;Task&gt;
+	 */
+	public List<Task> getTasks();
 	
 	/**
 	 * For the specified parent Task return the list of sub tasks

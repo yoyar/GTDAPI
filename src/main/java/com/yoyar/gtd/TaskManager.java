@@ -16,6 +16,10 @@ public interface TaskManager {
 
 	public Task update(Task task);
 	
+	
+	/* TODO: refactor, getToplevelTasks should be same name as getTasks
+	 * with a different signature...
+	 */
 	public List<Task> getTopLevelTasks();
 	
 	public List<Task> getTasks(Task parentTask);

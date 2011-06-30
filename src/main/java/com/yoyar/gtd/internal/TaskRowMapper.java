@@ -8,7 +8,9 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+@Component("taskRowMapper")
 class TaskRowMapper implements RowMapper<Task> {
 	
 	@Autowired

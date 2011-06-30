@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
+import org.springframework.stereotype.Component;
 
+@Component("taskMappingQuery")
 class TaskMappingQuery extends MappingSqlQuery<Task> {
 
 	@Autowired
-	private TaskFactory taskFactory;
-
 	public TaskMappingQuery(DataSource dataSource) {
 
 		super(dataSource, "select * from Task where id = :id");

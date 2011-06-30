@@ -2,13 +2,13 @@ package com.yoyar.gtd;
 
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.yoyar.gtd.internal.Priority;
 import com.yoyar.gtd.internal.Task;
 import com.yoyar.gtd.internal.TaskRepository;
 
+@Component("taskManager")
 public class TaskManagerImpl implements TaskManager {
 
 	@Autowired
@@ -46,7 +46,7 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public void deleteAll() {
 		// TODO: with sub tasks this likely needs to delete recursively, starting first with leaf nodes.
-		taskRepository.deleteAll();
+		taskRepository.delete();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public List<Task> getTopLevelTasks() {
-		return taskRepository.getTopLevelTasks();
+		return taskRepository.getTasks();
 	}
 
 	@Override

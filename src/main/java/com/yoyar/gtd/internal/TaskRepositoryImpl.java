@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.jdbc.support.incrementer.DataFieldMaxValueIncrementer;
+import org.springframework.stereotype.Component;
 
+@Component("taskRepository")
 class TaskRepositoryImpl implements TaskRepository {
 
 	@Autowired
@@ -61,11 +63,6 @@ class TaskRepositoryImpl implements TaskRepository {
 			task.setPriority(Priority.DD_LOW);
 		}
 		
-		//System.out.println("Parent id: " + task.getParentId());
-			
-		if( null != task.getParentId()) {
-			System.out.println("addOrUpdate Parent ID: " + task.getParentId());
-		}
 		
 		SqlParameterSource namedParameters = new MapSqlParameterSource()
 				.addValue("id", task.getEntityId())
@@ -81,13 +78,13 @@ class TaskRepositoryImpl implements TaskRepository {
 	}
 
 	@Override
-	public long addTask(Task parent, Task task) {
+	public long addTask(Task parent, Task task) {//TODO remove me, I don't think anyone uses me.
 		throw new NotImplementedException();
 
 	}
 
 	@Override
-	public long deleteTask(Task task) {
+	public long delete(Task task) {
 		throw new NotImplementedException();
 
 	}
@@ -108,7 +105,7 @@ class TaskRepositoryImpl implements TaskRepository {
 	}
 
 	@Override
-	public void deleteAll() {
+	public void delete() {
 		
 		/* 
 		 * Note: in the database schema: delete is set to cascade so all tasks 
@@ -119,6 +116,7 @@ class TaskRepositoryImpl implements TaskRepository {
 
 	@Override
 	public Task updateTask(Task task) {
+		//TODO remove me, I don't think anyone uses me.
 		throw new NotImplementedException();
 	}
 
@@ -126,7 +124,7 @@ class TaskRepositoryImpl implements TaskRepository {
 	RowMapper<Task> taskRowMapper;
 	
 	@Override
-	public List<Task> getTopLevelTasks() {
+	public List<Task> getTasks() {
 		String sql = "select * from Task where parentid is null";
 		return jdbcTemplate.query(sql, taskRowMapper);
 	}
@@ -134,7 +132,7 @@ class TaskRepositoryImpl implements TaskRepository {
 	@Override
 	public List<Task> getTasks(Task parentTask) {
 		
-		// TODO: looks like getTopLevelTasks and thsi method have duplications (refactor)
+		// TODO: looks like getTopLevelTasks and thsi method have duplications ( Perhaps refactor)
 		
 		String sql = "select * from Task where parentid = :parentid";
 		

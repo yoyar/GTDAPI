@@ -61,15 +61,15 @@ public class TaskTests {
 		Task task1 = getTask1();
 		task1.setTitle("");
 	}
-	
+		
 	@Test(expected=IllegalArgumentException.class) 
 	public void testMakeTaskWithNullTitle() {
-		new BasicTaskFactory().makeTask(null);
+		taskFactory.makeTask(null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
 	public void testMakeTaskWithNullStringTitle() {
-		new BasicTaskFactory().makeTask("");
+		taskFactory.makeTask("");
 	}
 	
 	

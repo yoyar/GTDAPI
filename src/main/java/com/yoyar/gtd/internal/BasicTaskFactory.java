@@ -1,10 +1,11 @@
 package com.yoyar.gtd.internal;
 
+import org.springframework.stereotype.Component;
+
 /**
- * 
- * @author matt
- *
+ * Produces objects of type Task
  */
+@Component("taskFactory")
 public class BasicTaskFactory implements TaskFactory {
 
 	public Task makeTask(String title) {

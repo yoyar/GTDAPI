@@ -52,7 +52,7 @@ public class TaskManagerTests {
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
-	public void testAddSubTaskToParentWhenParentIdIsNull() {
+	public void testAddSubTaskToParentWhenParentsIdIsNull() {
 		
 		String parentTaskTitle = "parent task title";
 		String subTaskTitle = "sub task title";
