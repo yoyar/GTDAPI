@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 class TaskRepositoryImpl implements TaskRepository {
 
 	@Autowired
+	RowMapper<Task> taskRowMapper;
+	
+	@Autowired
 	private NamedParameterJdbcOperations jdbcParamTemplate;
 
 	@Autowired
@@ -26,7 +29,10 @@ class TaskRepositoryImpl implements TaskRepository {
 	private DataFieldMaxValueIncrementer incrementer;
 	
 	@Autowired
-	private TaskFactory taskFactory;
+	MappingSqlQuery<Task> taskMappingQuery;
+	
+//	@Autowired
+//	private TaskFactory taskFactory;
 
 	public TaskRepositoryImpl() {
 	}
@@ -40,36 +46,50 @@ class TaskRepositoryImpl implements TaskRepository {
 		// TODO externalize pattern
 		if (null != task.getDueDate()) {
 			dueDateString = String.format(
-					"%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", task.getDueDate());
+					"%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", 
+					task.getDueDate()
+			);
+		}
+		
+		String completed = null;
+		
+		if( null != task.getCompleted()) {
+			completed = String.format(
+					"%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS",
+					task.getCompleted()
+			);
 		}
 		
 		if( null == task.getEntityId()) {
+			
 			/* this is an insert, so we need to generate an id */
 			task.setEntityId(incrementer.nextLongValue());
 			
-			sql = "insert into Task (id, parentid, title, dueDate, priority) "
-				+ "values (:id, :parentid, :title, :dueDate, :priority)";
+			sql = "insert into Task (taskid, parentid, priorityid, title, duedate, completed) "
+				+ "values (:taskid, :parentid, :priorityid, :title, :dueDate, :completed)";
+			
 		} else {
+			
 			// update
-			sql = "update Task " +
-					" set title = :title," +
-					" parentid = :parentid," +
-					" dueDate = :dueDate," +
-					" priority = :priority" +
-					" where id = :id";
+			sql = "update Task set title = :title, parentid = :parentid," +
+					" priorityid = :priorityid," +
+					" duedate = :dueDate," +
+					" completed = :completed" + 
+					" where taskid = :taskid";
+			
 		} // fi
 		
 		if( task.getPriority() == null) {
-			task.setPriority(Priority.DD_LOW);
+			task.setPriority(Priority.LOW);
 		}
 		
-		
 		SqlParameterSource namedParameters = new MapSqlParameterSource()
-				.addValue("id", task.getEntityId())
+				.addValue("taskid", task.getEntityId())
 				.addValue("title", task.getTitle())
 				.addValue("dueDate", dueDateString)
-				.addValue("priority", task.getPriority().toString())
+				.addValue("priorityid", task.getPriority().toString())
 				.addValue("parentid", task.getParentId())
+				.addValue("completed", completed)
 				;
 
 		jdbcParamTemplate.update(sql, namedParameters);
@@ -77,20 +97,18 @@ class TaskRepositoryImpl implements TaskRepository {
 		return task;
 	}
 
-	@Override
-	public long addTask(Task parent, Task task) {//TODO remove me, I don't think anyone uses me.
-		throw new NotImplementedException();
-
-	}
+//	@Override
+//	public long addTask(Task parent, Task task) {//TODO remove me, I don't think anyone uses me.
+//		throw new NotImplementedException();
+//
+//	}
 
 	@Override
 	public long delete(Task task) {
-		throw new NotImplementedException();
-
+		long taskid = task.getEntityId();
+		delete(taskid);
+		return taskid;
 	}
-
-	@Autowired
-	MappingSqlQuery<Task> taskMappingQuery;
 
 	@Override
 	public Task getTask(long taskid) {
@@ -114,14 +132,12 @@ class TaskRepositoryImpl implements TaskRepository {
 		jdbcTemplate.execute("delete from Task where parentid is null");
 	}
 
-	@Override
-	public Task updateTask(Task task) {
-		//TODO remove me, I don't think anyone uses me.
-		throw new NotImplementedException();
-	}
+//	@Override
+//	public Task updateTask(Task task) {
+//		//TODO remove me, I don't think anyone uses me.
+//		throw new NotImplementedException();
+//	}
 
-	@Autowired
-	RowMapper<Task> taskRowMapper;
 	
 	@Override
 	public List<Task> getTasks() {
@@ -132,8 +148,6 @@ class TaskRepositoryImpl implements TaskRepository {
 	@Override
 	public List<Task> getTasks(Task parentTask) {
 		
-		// TODO: looks like getTopLevelTasks and thsi method have duplications ( Perhaps refactor)
-		
 		String sql = "select * from Task where parentid = :parentid";
 		
 		SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -143,4 +157,10 @@ class TaskRepositoryImpl implements TaskRepository {
 		return jdbcParamTemplate.query(sql, namedParameters, taskRowMapper);
 	}
 
+	@Override
+	public long delete(long taskid) {
+		
+		jdbcTemplate.execute("delete from Task where taskid = " + taskid);
+		return taskid;
+	}
 }

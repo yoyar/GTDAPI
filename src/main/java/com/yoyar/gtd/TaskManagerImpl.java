@@ -44,8 +44,7 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public void deleteAll() {
-		// TODO: with sub tasks this likely needs to delete recursively, starting first with leaf nodes.
+	public void delete() {
 		taskRepository.delete();
 	}
 
@@ -55,7 +54,7 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public List<Task> getTopLevelTasks() {
+	public List<Task> getTasks() {
 		return taskRepository.getTasks();
 	}
 

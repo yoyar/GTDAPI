@@ -1,5 +1,6 @@
 package com.yoyar.gtd.internal;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -9,16 +10,6 @@ class TaskImpl implements Task {
 
 	private Long parentid = null;
 	
-	@Override
-	public Long getParentId() {
-		return parentid;
-	}
-
-	@Override
-	public void setParentId(Long parentid) {
-		this.parentid = parentid;
-	}
-
 	private List<Task> tasks;
 
 	private String title;
@@ -31,31 +22,28 @@ class TaskImpl implements Task {
 
 	public TaskImpl() {
 	}
-	
+
+	@Override
 	public void addTask(Task task) {
 		this.tasks.add(task);
 	}
 
+	@Override
 	public Long getEntityId() {
 		return id;
 	}
 
+	@Override
 	public void setEntityId(long id) {
 		this.id = id;
 	}
 
-//	public List<Task> getTasks() {
-//		return tasks;
-//	}
-//
-//	public void setTasks(List<Task> tasks) {
-//		this.tasks = tasks;
-//	}
-
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		
 		if( null == title || "" == title) {
@@ -65,34 +53,52 @@ class TaskImpl implements Task {
 		this.title = title;
 	}
 
+	@Override
 	public Priority getPriority() {
 		return priority;
 	}
 
+	@Override
 	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
 
+	@Override
 	public Date getDueDate() {
 		return dueDate;
 	}
 
+	@Override
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
 
+	@Override
 	public Date getCompleted() {
 		return completed;
 	}
 
+	@Override
 	public void setCompleted(Date completed) {
 		this.completed = completed;
 	}
 
+	@Override
 	public boolean contains(Task task) {
 		return this.tasks.contains(task);
 	}
 	
+	@Override
+	public Long getParentId() {
+		return parentid;
+	}
+
+	@Override
+	public void setParentId(Long parentid) {
+		this.parentid = parentid;
+	}
+	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("[Task id=")
 		.append(getEntityId())
@@ -126,5 +132,15 @@ class TaskImpl implements Task {
 		int hash = 7;
 		hash = 31 * hash + getTitle().hashCode();		
 		return hash;
+	}
+
+	@Override
+	public void setDueDate(Calendar due) {
+		setDueDate(due.getTime());
+	}
+
+	@Override
+	public void setCompleted(Calendar completed) {
+		setCompleted(completed.getTime());
 	}
 }

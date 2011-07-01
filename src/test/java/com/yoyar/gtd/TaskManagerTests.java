@@ -2,6 +2,8 @@ package com.yoyar.gtd;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
@@ -26,6 +28,9 @@ import com.yoyar.gtd.internal.TaskFactory;
 public class TaskManagerTests {
 
 	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
 	TaskManager taskManager;
 
 	@Autowired
@@ -39,7 +44,7 @@ public class TaskManagerTests {
 			taskManager.add(t);
 		}
 		
-		Collection<Task> tasks = taskManager.getTopLevelTasks();
+		Collection<Task> tasks = taskManager.getTasks();
 		
 		for( Task task : tasks) {
 			//System.out.println(task);
@@ -48,7 +53,51 @@ public class TaskManagerTests {
 
 	@After
 	public void tearDown() throws Exception {
-		taskManager.deleteAll();
+		taskManager.delete();
+	}
+	
+	@Test
+	public void testCreateTaskWithAllFieldsFilledIn() {
+				
+		Task parent = taskFactory.makeTask("parent task");
+		taskManager.add(parent);
+		
+		Calendar dueDate = Calendar.getInstance();
+		dueDate.set(2011, 11, 19, 1, 1, 1);
+		
+		Calendar completedDate = Calendar.getInstance();
+		completedDate.set(2011, 11, 28, 1, 1, 1);
+		
+		Priority p = Priority.HIGH;
+		
+		String originalTitle = "original task";
+		
+		Task originalTask = taskFactory.makeTask(originalTitle);
+		originalTask.setDueDate(dueDate);
+		originalTask.setParentId(parent.getEntityId());
+		originalTask.setPriority(p);
+		originalTask.setCompleted(completedDate);
+		
+		taskManager.add(originalTask);
+		
+		Long originalTaskID = originalTask.getEntityId();
+		assertNotNull(originalTaskID);
+		
+		Task taskFromDb = taskManager.get(originalTask.getEntityId());
+		
+		Calendar ddCalendarFromDb = Calendar.getInstance();
+		ddCalendarFromDb.setTime(taskFromDb.getDueDate());
+		
+		Calendar cdCalendarFromDb = Calendar.getInstance();
+		cdCalendarFromDb.setTime(taskFromDb.getCompleted());
+		
+		assertTrue(DateUtil.calendarsAreEqual(dueDate, ddCalendarFromDb));
+		assertTrue(DateUtil.calendarsAreEqual(completedDate, cdCalendarFromDb));
+		assertEquals(originalTitle, taskFromDb.getTitle());
+		assertEquals(p, taskFromDb.getPriority());
+		assertEquals(parent.getEntityId(), taskFromDb.getParentId());
+		assertEquals(originalTaskID, taskFromDb.getEntityId());
+		
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
@@ -94,6 +143,8 @@ public class TaskManagerTests {
 		
 		List<Task> subTasks = taskManager.getTasks(parentTaskFromDb);
 		
+		assertEquals(1, subTasks.size());
+		
 		// there is only one subTask so it must be at idx zero
 		Task subTaskFromDB = subTasks.get(0);
 		
@@ -132,7 +183,7 @@ public class TaskManagerTests {
 		
 		assertEquals(parentFromDB.getEntityId(), subtaskFromDB.getParentId());
 		
-		taskManager.deleteAll();
+		taskManager.delete();
 		
 		assertNull(taskManager.get(parent.getEntityId()));
 		assertNull(taskManager.get(subtask.getEntityId()));
@@ -144,13 +195,11 @@ public class TaskManagerTests {
 		
 	}
 	
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 	
 	@Test
 	public void testUpdateTask() {
 		
-		long taskid = taskManager.getTopLevelTasks().iterator().next().getEntityId();
+		long taskid = taskManager.getTasks().iterator().next().getEntityId();
 		
 		Task originalTask = taskManager.get(taskid);
 		
@@ -173,7 +222,7 @@ public class TaskManagerTests {
 	@Test 
 	public void testAddTaskWithPriority() {
 		
-		Priority originalPriority = Priority.DD_LOW;
+		Priority originalPriority = Priority.LOW;
 		
 		String title = "test task with priority";
 		Task task = taskFactory.makeTask(title);
@@ -204,18 +253,20 @@ public class TaskManagerTests {
 		Calendar calFromDB = Calendar.getInstance();
 		calFromDB.setTime(fromDB.getDueDate());
 
-		assertEquals(calOriginal.get(Calendar.YEAR),
-				calFromDB.get(Calendar.YEAR));
-		assertEquals(calOriginal.get(Calendar.MONTH),
-				calFromDB.get(Calendar.MONTH));
-		assertEquals(calOriginal.get(Calendar.DAY_OF_MONTH),
-				calFromDB.get(Calendar.DAY_OF_MONTH));
-		assertEquals(calOriginal.get(Calendar.HOUR_OF_DAY),
-				calFromDB.get(Calendar.HOUR_OF_DAY));
-		assertEquals(calOriginal.get(Calendar.MINUTE),
-				calFromDB.get(Calendar.MINUTE));
-		assertEquals(calOriginal.get(Calendar.SECOND),
-				calFromDB.get(Calendar.SECOND));
+		assertTrue(DateUtil.calendarsAreEqual(calFromDB, calOriginal));
+		
+//		assertEquals(calOriginal.get(Calendar.YEAR),
+//				calFromDB.get(Calendar.YEAR));
+//		assertEquals(calOriginal.get(Calendar.MONTH),
+//				calFromDB.get(Calendar.MONTH));
+//		assertEquals(calOriginal.get(Calendar.DAY_OF_MONTH),
+//				calFromDB.get(Calendar.DAY_OF_MONTH));
+//		assertEquals(calOriginal.get(Calendar.HOUR_OF_DAY),
+//				calFromDB.get(Calendar.HOUR_OF_DAY));
+//		assertEquals(calOriginal.get(Calendar.MINUTE),
+//				calFromDB.get(Calendar.MINUTE));
+//		assertEquals(calOriginal.get(Calendar.SECOND),
+//				calFromDB.get(Calendar.SECOND));
 	}
 
 	@Test

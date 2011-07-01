@@ -14,21 +14,22 @@ import org.springframework.stereotype.Component;
 
 @Component("taskMappingQuery")
 class TaskMappingQuery extends MappingSqlQuery<Task> {
-
-	@Autowired
-	public TaskMappingQuery(DataSource dataSource) {
-
-		super(dataSource, "select * from Task where id = :id");
-		super.declareParameter(new SqlParameter("id", Types.BIGINT));
-		compile();
-	}
-
+	
 	@Autowired
 	RowMapper<Task> taskRowMapper;
 	
+	@Autowired
+	public TaskMappingQuery(DataSource dataSource) {
+
+		super(
+			dataSource, 
+			"select * from TaskView where taskid = :taskid"
+		);
+		super.declareParameter(new SqlParameter("taskid", Types.BIGINT));
+		compile();
+	}
+	
 	protected Task mapRow(ResultSet rs, int rowNumber) throws SQLException {
-		
 		return taskRowMapper.mapRow(rs, rowNumber);
-		
 	}
 }

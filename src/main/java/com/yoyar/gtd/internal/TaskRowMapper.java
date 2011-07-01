@@ -24,19 +24,29 @@ class TaskRowMapper implements RowMapper<Task> {
 		/* TODO: externalize format */
 
 		Date dueDate = null;
+		Date completed = null;
 
+		// TODO refactor these duplications
 		try {
-			if (rs.getString("dueDate") != null)
-				dueDate = format.parse(rs.getString("dueDate"));
+			if (rs.getString("duedate") != null)
+				dueDate = format.parse(rs.getString("duedate"));
+		} catch (ParseException e) {
+			throw new RuntimeException("Unable to parse date.");
+		}
+		
+		try {
+			if (rs.getString("completed") != null)
+				completed = format.parse(rs.getString("completed"));
 		} catch (ParseException e) {
 			throw new RuntimeException("Unable to parse date.");
 		}
 
 		Task task = taskFactory.makeTask(rs.getString("title"));
-		task.setEntityId(rs.getLong("id"));
+		task.setEntityId(rs.getLong("taskid"));
 		task.setParentId((Long)rs.getObject("parentid"));
 		task.setDueDate(dueDate);
-		task.setPriority(Priority.valueOf(rs.getString("priority")));
+		task.setPriority(Priority.valueOf(rs.getString("priorityid")));
+		task.setCompleted(completed);
 
 		return task;
 	}

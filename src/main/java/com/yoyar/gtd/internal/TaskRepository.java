@@ -6,10 +6,6 @@ public interface TaskRepository {
 
 	public Task addOrUpdate(Task task);
 	
-	public Task updateTask(Task task);
-
-	public long addTask(Task parent, Task task);
-
 	public Task getTask(long taskid);
 
 	/**
@@ -19,6 +15,8 @@ public interface TaskRepository {
 	 * @return long
 	 */
 	public long delete(Task task);
+	
+	public long delete(long taskid);
 
 	/**
 	 * Delete ALL tasks

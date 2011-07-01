@@ -7,21 +7,34 @@ import com.yoyar.gtd.internal.Task;
 public interface TaskManager {
 
 	/**
-	 * Add a Task and return the just added Task
+	 * Add a Task and return it
 	 * 
-	 * @param task
-	 * @return long taskid
+	 * @param Task
+	 * @return Task
 	 */
 	public Task add(Task task);
 
+	/**
+	 * Update the specified task
+	 * 
+	 * @param task
+	 * @return Task
+	 */
 	public Task update(Task task);
 	
-	
-	/* TODO: refactor, getToplevelTasks should be same name as getTasks
-	 * with a different signature...
+	/**
+	 * Return a List of all top level tasks; that is, tasks with no parent id
+	 * 
+	 * @return List&lt;Task&gt;
 	 */
-	public List<Task> getTopLevelTasks();
+	public List<Task> getTasks();
 	
+	/**
+	 * For the specified parent task, return the sub tasks.
+	 * 
+	 * @param parentTask
+	 * @return List&lt;Task&gt;
+	 */
 	public List<Task> getTasks(Task parentTask);
 	
 	/**
@@ -45,5 +58,5 @@ public interface TaskManager {
 	/**
 	 * Delete all tasks in the database. Caution!!!
 	 */
-	public void deleteAll();
+	public void delete();
 }
