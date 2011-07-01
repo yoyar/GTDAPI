@@ -11,6 +11,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.yoyar.gtd.util.DateUtil;
+
 public class DateUtilTests {
 
 	@Test

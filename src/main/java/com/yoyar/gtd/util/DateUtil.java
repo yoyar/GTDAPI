@@ -1,4 +1,4 @@
-package com.yoyar.gtd;
+package com.yoyar.gtd.util;
 
 import java.util.Calendar;
 import java.util.Date;

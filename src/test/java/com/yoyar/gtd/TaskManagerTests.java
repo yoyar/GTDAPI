@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.yoyar.gtd.internal.Priority;
 import com.yoyar.gtd.internal.Task;
 import com.yoyar.gtd.internal.TaskFactory;
+import com.yoyar.gtd.util.DateUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:com/yoyar/gtd/internal/system-test-config.xml")

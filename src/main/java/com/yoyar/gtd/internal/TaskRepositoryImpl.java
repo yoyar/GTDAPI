@@ -141,14 +141,14 @@ class TaskRepositoryImpl implements TaskRepository {
 	
 	@Override
 	public List<Task> getTasks() {
-		String sql = "select * from Task where parentid is null";
+		String sql = "select * from TaskView where parentid is null";
 		return jdbcTemplate.query(sql, taskRowMapper);
 	}
 
 	@Override
 	public List<Task> getTasks(Task parentTask) {
 		
-		String sql = "select * from Task where parentid = :parentid";
+		String sql = "select * from TaskView where parentid = :parentid";
 		
 		SqlParameterSource namedParameters = new MapSqlParameterSource()
 			.addValue("parentid", parentTask.getEntityId())
