@@ -2,29 +2,23 @@ package com.yoyar.gtd.entities;
 
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component("taskRepository")
 class HibernateTaskRepositoryImpl implements TaskRepository {
 
+	@Autowired
 	private SessionFactory sessionFactory;
-	
-	@Override
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
 	
 	private Session getCurrentSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
 
 	@Override
-	public ITask addOrUpdate(ITask task) {
+	public ITask saveOrUpdate(ITask task) {
 		getCurrentSession().saveOrUpdate(task);
 		return task;
 	}
@@ -38,26 +32,6 @@ class HibernateTaskRepositoryImpl implements TaskRepository {
 	public long delete(ITask task) {
 		long taskid = task.getId();
 		getCurrentSession().delete(task);
-		return taskid;
-	}
-
-	/**
-	 * TODO delete me
-	 */
-	@Override
-	@Deprecated
-	public long delete(long taskid) {
-		
-//		Task t = get(taskid);
-//		delete(t);
-		
-		Query q = getCurrentSession().createQuery(
-				"delete from :type t where t.taskid = :taskid"
-				).setString("type", Task.class.getName())
-				.setLong("taskid", taskid);
-		
-		System.out.println(q.getQueryString() + " taskid: "+ taskid);
-		
 		return taskid;
 	}
 
@@ -77,13 +51,4 @@ class HibernateTaskRepositoryImpl implements TaskRepository {
 			"from Task t where t.parent_taskid is null"
 		).list();
 	}
-
-	@Override
-	@Deprecated
-	public List<ITask> getTasks(ITask parentTask) {
-		throw new NotImplementedException();
-	}
-	
-	
-
 }

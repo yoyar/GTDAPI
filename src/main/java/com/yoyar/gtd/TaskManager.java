@@ -13,15 +13,6 @@ public interface TaskManager {
 	 * @return Task
 	 */
 	public ITask saveOrUpdate(ITask task);
-
-	/**
-	 * Update the specified task
-	 * 
-	 * @param task
-	 * @return Task
-	 */
-	@Deprecated
-	public ITask update(ITask task);
 	
 	/**
 	 * Return a List of all top level tasks; that is, tasks with no parent id
@@ -30,26 +21,6 @@ public interface TaskManager {
 	 */
 	public List<ITask> getTasks();
 	
-	/**
-	 * For the specified parent task, return the sub tasks.
-	 * 
-	 * @param parentTask
-	 * @return List&lt;Task&gt;
-	 */
-	public List<ITask> getTasks(ITask parentTask);
-	
-	/**
-	 * Add a newly created Task to the ParentTask and return just added Task
-	 * 
-	 * @param ITask
-	 *            parent
-	 * @param ITask
-	 *            task
-	 * @return long taskid
-	 */
-	@Deprecated
-	public ITask add(ITask parent, ITask task);
-
 	/**
 	 * Return the Task with the specified taskid.
 	 * 

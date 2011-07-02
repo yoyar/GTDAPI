@@ -19,27 +19,12 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public ITask saveOrUpdate(ITask task) {
-		return taskRepository.addOrUpdate(task);
-	}
-
-	@Override
-	@Deprecated
-	public ITask add(ITask parent, ITask task) {
-		
-		if( parent.getId() == null) {
-			throw new IllegalArgumentException("The parent task's id must not be null");
-		}
-		
-		//task.setParentId(parent.getId());
-		
-		return taskRepository.addOrUpdate(task);
-		
+		return taskRepository.saveOrUpdate(task);
 	}
 
 	@Override
 	public ITask get(long taskid) {
-		ITask task = taskRepository.get(taskid);
-		return task;
+		return taskRepository.get(taskid);
 	}
 
 	@Override
@@ -48,23 +33,12 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public ITask update(ITask task) {
-		return taskRepository.addOrUpdate(task);
-	}
-
-	@Override
 	public List<ITask> getTasks() {
 		return taskRepository.getTasks();
-	}
-
-	@Override
-	public List<ITask> getTasks(ITask parentTask) {
-		return taskRepository.getTasks(parentTask);
 	}
 
 	@Override
 	public long delete(ITask task) {
 		return taskRepository.delete(task);
 	}
-
 }

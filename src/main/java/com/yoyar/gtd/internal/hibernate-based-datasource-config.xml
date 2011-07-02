@@ -31,19 +31,4 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-
-
-	<bean id="taskRepository" class="com.yoyar.gtd.entities.HibernateTaskRepositoryImpl">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg name="dataSource" ref="dataSource" />
-	</bean>
-
-	<bean id="incrementer" scope="singleton"
-		class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-
-	</bean>
-
 </beans>
