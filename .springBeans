@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beansProjectDescription>
 	<version>1</version>
-	<pluginVersion><![CDATA[2.5.0.201008251000-M3]]></pluginVersion>
+	<pluginVersion><![CDATA[2.6.0.201104111100-PATCH]]></pluginVersion>
 	<configSuffixes>
 		<configSuffix><![CDATA[xml]]></configSuffix>
 	</configSuffixes>
-	<enableImports><![CDATA[false]]></enableImports>
+	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
 		<config>src/main/java/com/yoyar/gtd/internal/application-config.xml</config>
 		<config>src/test/java/com/yoyar/gtd/internal/system-test-config.xml</config>
+		<config>src/main/java/com/yoyar/gtd/internal/jdbc-based-datasource-config.xml</config>
+		<config>src/main/java/com/yoyar/gtd/internal/hibernate-based-datasource-config.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

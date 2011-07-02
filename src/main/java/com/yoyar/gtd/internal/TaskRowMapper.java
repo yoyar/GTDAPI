@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.TaskFactory;
+
 @Component("taskRowMapper")
 class TaskRowMapper implements RowMapper<Task> {
 	
@@ -42,8 +45,8 @@ class TaskRowMapper implements RowMapper<Task> {
 		}
 
 		Task task = taskFactory.makeTask(rs.getString("title"));
-		task.setEntityId(rs.getLong("taskid"));
-		task.setParentId((Long)rs.getObject("parentid"));
+		task.setId(rs.getLong("taskid"));
+		//task.setParentId((Long)rs.getObject("parentid"));
 		task.setDueDate(dueDate);
 		task.setPriority(Priority.valueOf(rs.getString("priorityid")));
 		task.setCompleted(completed);

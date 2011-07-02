@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.stereotype.Component;
 
+import com.yoyar.gtd.entities.Task;
+
 @Component("taskMappingQuery")
 class TaskMappingQuery extends MappingSqlQuery<Task> {
 	

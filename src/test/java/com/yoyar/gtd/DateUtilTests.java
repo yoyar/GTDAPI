@@ -11,7 +11,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.yoyar.gtd.util.DateUtil;
+import com.yoyar.gtd.util.GtdDateUtil;
 
 public class DateUtilTests {
 
@@ -26,19 +26,19 @@ public class DateUtilTests {
 		Date d1 = c1.getTime();
 		Date d2 = c2.getTime();
 		
-		assertTrue(DateUtil.datesAreEqual(d1, d2));
+		assertTrue(GtdDateUtil.datesAreEqual(d1, d2));
 		
 		c2.set(Calendar.MILLISECOND, 111);
 		d2 = c2.getTime();
 		
 		assertThat(d1, not(equalTo(d2)));
 		
-		assertTrue(DateUtil.datesAreEqual(d1, d2));
+		assertTrue(GtdDateUtil.datesAreEqual(d1, d2));
 		
 		c2.set(2012, 11, 19, 1, 2, 1);
 		d2 = c2.getTime();
 		
-		assertFalse(DateUtil.datesAreEqual(d1, d2));
+		assertFalse(GtdDateUtil.datesAreEqual(d1, d2));
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ public class DateUtilTests {
 		c1.set(2011, 11, 19, 1, 2, 1);
 		c2.set(2011, 11, 19, 1, 2, 1);
 		
-		assertTrue(DateUtil.calendarsAreEqual(c1, c2));
+		assertTrue(GtdDateUtil.calendarsAreEqual(c1, c2));
 		
 		c2.set(Calendar.MILLISECOND, 100);
 		
@@ -59,11 +59,11 @@ public class DateUtilTests {
 				not(equalTo(c2.get(Calendar.MILLISECOND)))
 		);
 		
-		assertTrue(DateUtil.calendarsAreEqual(c1, c2));
+		assertTrue(GtdDateUtil.calendarsAreEqual(c1, c2));
 		
 		c2.set(2011, 10, 19, 1, 2, 2);
 		
-		assertFalse(DateUtil.calendarsAreEqual(c1, c2));
+		assertFalse(GtdDateUtil.calendarsAreEqual(c1, c2));
 		
 	}
 }

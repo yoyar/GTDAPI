@@ -1,21 +1,34 @@
-package com.yoyar.gtd.internal;
+package com.yoyar.gtd.entities;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import com.yoyar.gtd.internal.Priority;
 
 public interface Task {
 
-	public Long getEntityId();
+	public Long getId();
 
-	public void setEntityId(long id);
+	public void setId(long id);
 	
-	public void setParentId(Long id);
+	/**
+	 * Add a child task to this task.
+	 */
+	public void add(Task task);
 	
-	public Long getParentId();
-
-	public boolean contains(Task task);
-
-	public void addTask(Task task);
+	/**
+	 * Get the child tasks for this task.
+	 */
+	public List<Task> getTasks();
+	
+	/**
+	 * Get the parent task for this task.
+	 * @return Task
+	 */
+	public Task getParent();
+	
+	public void setParent(Task parent);
 
 	public String getTitle();
 

@@ -11,8 +11,9 @@
 
 	<jdbc:embedded-database id="dataSource">
 		<jdbc:script location="classpath:com/yoyar/gtd/testdb/schema.sql" />
+		<jdbc:script location="classpath:com/yoyar/gtd/testdb/test-data.sql" />
 	</jdbc:embedded-database>
 	
-	<import resource="classpath:com/yoyar/gtd/internal/jdbc-based-datasource-config.xml" />
+	<import resource="classpath:com/yoyar/gtd/internal/hibernate-based-datasource-config.xml" />
 	
 </beans>

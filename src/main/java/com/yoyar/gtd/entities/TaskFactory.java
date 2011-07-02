@@ -1,4 +1,5 @@
-package com.yoyar.gtd.internal;
+package com.yoyar.gtd.entities;
+
 
 public interface TaskFactory {
 

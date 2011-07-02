@@ -5,9 +5,8 @@ package com.yoyar.gtd.internal;
  * given to each in the database. 
  */
 public enum Priority {
-	 
 	TOP,
 	HIGH,
 	MEDIUM,
-	LOW;
+	LOW
 }

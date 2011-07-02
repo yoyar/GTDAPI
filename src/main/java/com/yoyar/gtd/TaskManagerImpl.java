@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.yoyar.gtd.internal.Task;
-import com.yoyar.gtd.internal.TaskRepository;
+import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.TaskRepository;
 
 @Component("taskManager")
 public class TaskManagerImpl implements TaskManager {
@@ -18,20 +18,19 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public Task add(Task task) {
-		
+	public Task saveOrUpdate(Task task) {
 		return taskRepository.addOrUpdate(task);
-
 	}
 
 	@Override
+	@Deprecated
 	public Task add(Task parent, Task task) {
 		
-		if( parent.getEntityId() == null) {
+		if( parent.getId() == null) {
 			throw new IllegalArgumentException("The parent task's id must not be null");
 		}
 		
-		task.setParentId(parent.getEntityId());
+		//task.setParentId(parent.getId());
 		
 		return taskRepository.addOrUpdate(task);
 		
@@ -39,7 +38,7 @@ public class TaskManagerImpl implements TaskManager {
 
 	@Override
 	public Task get(long taskid) {
-		Task task = taskRepository.getTask(taskid);
+		Task task = taskRepository.get(taskid);
 		return task;
 	}
 
@@ -62,4 +61,10 @@ public class TaskManagerImpl implements TaskManager {
 	public List<Task> getTasks(Task parentTask) {
 		return taskRepository.getTasks(parentTask);
 	}
+
+	@Override
+	public long delete(Task task) {
+		return taskRepository.delete(task);
+	}
+
 }

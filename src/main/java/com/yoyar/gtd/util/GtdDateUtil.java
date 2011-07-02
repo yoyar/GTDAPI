@@ -3,7 +3,7 @@ package com.yoyar.gtd.util;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateUtil {
+public class GtdDateUtil {
 
 	/**
 	 * Compare dates, excluding millis. If the year, month, day, hours,
@@ -11,6 +11,7 @@ public class DateUtil {
 	 * 
 	 * @param c1
 	 * @param c2
+	 * @return boolean
 	 */
 	public static boolean calendarsAreEqual(Calendar c1, Calendar c2) {
 	
@@ -23,6 +24,14 @@ public class DateUtil {
 		;
 	}
 	
+	/**
+	 * Compare dates, excluding millis. If the year, month, day, hours,
+	 * minutes, seconds are the same, then dates are equal. Millis don't matter.
+	 * 
+	 * @param d1
+	 * @param d2
+	 * @return
+	 */
 	public static boolean datesAreEqual(Date d1, Date d2) {
 		
 		Calendar c1 = Calendar.getInstance();

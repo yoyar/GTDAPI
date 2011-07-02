@@ -1,6 +1,7 @@
-package com.yoyar.gtd.internal;
+package com.yoyar.gtd.entities;
 
 import org.springframework.stereotype.Component;
+
 
 /**
  * Produces objects of type Task

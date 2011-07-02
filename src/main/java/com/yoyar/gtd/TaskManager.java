@@ -2,7 +2,7 @@ package com.yoyar.gtd;
 
 import java.util.List;
 
-import com.yoyar.gtd.internal.Task;
+import com.yoyar.gtd.entities.Task;
 
 public interface TaskManager {
 
@@ -12,7 +12,7 @@ public interface TaskManager {
 	 * @param Task
 	 * @return Task
 	 */
-	public Task add(Task task);
+	public Task saveOrUpdate(Task task);
 
 	/**
 	 * Update the specified task
@@ -20,6 +20,7 @@ public interface TaskManager {
 	 * @param task
 	 * @return Task
 	 */
+	@Deprecated
 	public Task update(Task task);
 	
 	/**
@@ -46,6 +47,7 @@ public interface TaskManager {
 	 *            task
 	 * @return long taskid
 	 */
+	@Deprecated
 	public Task add(Task parent, Task task);
 
 	/**
@@ -59,4 +61,12 @@ public interface TaskManager {
 	 * Delete all tasks in the database. Caution!!!
 	 */
 	public void delete();
+	
+	/**
+	 * Delete the specified task, and return the id of the deleted task.
+	 * @param task
+	 * @return long
+	 */
+	public long delete(Task task);
+	
 }

@@ -1,12 +1,17 @@
-package com.yoyar.gtd.internal;
+package com.yoyar.gtd.entities;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+
+
 public interface TaskRepository {
 
+	public void setSessionFactory(SessionFactory sessionFactory);
+	
 	public Task addOrUpdate(Task task);
 	
-	public Task getTask(long taskid);
+	public Task get(long taskid);
 
 	/**
 	 * Delete the specified task.
@@ -16,12 +21,19 @@ public interface TaskRepository {
 	 */
 	public long delete(Task task);
 	
+	/**
+	 * Delete the task with the specified task id.
+	 * 
+	 * @param taskid
+	 * @return taskid
+	 */
 	public long delete(long taskid);
 
 	/**
 	 * Delete ALL tasks
+	 * @return number of items deleted
 	 */
-	public void delete();
+	public int delete();
 	
 	/**
 	 * Returns the top level tasks, that is, all tasks with no parents.
