@@ -2,17 +2,17 @@ package com.yoyar.gtd;
 
 import java.util.List;
 
-import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.ITask;
 
 public interface TaskManager {
 
 	/**
 	 * Add a Task and return it
 	 * 
-	 * @param Task
+	 * @param ITask
 	 * @return Task
 	 */
-	public Task saveOrUpdate(Task task);
+	public ITask saveOrUpdate(ITask task);
 
 	/**
 	 * Update the specified task
@@ -21,14 +21,14 @@ public interface TaskManager {
 	 * @return Task
 	 */
 	@Deprecated
-	public Task update(Task task);
+	public ITask update(ITask task);
 	
 	/**
 	 * Return a List of all top level tasks; that is, tasks with no parent id
 	 * 
 	 * @return List&lt;Task&gt;
 	 */
-	public List<Task> getTasks();
+	public List<ITask> getTasks();
 	
 	/**
 	 * For the specified parent task, return the sub tasks.
@@ -36,26 +36,26 @@ public interface TaskManager {
 	 * @param parentTask
 	 * @return List&lt;Task&gt;
 	 */
-	public List<Task> getTasks(Task parentTask);
+	public List<ITask> getTasks(ITask parentTask);
 	
 	/**
 	 * Add a newly created Task to the ParentTask and return just added Task
 	 * 
-	 * @param Task
+	 * @param ITask
 	 *            parent
-	 * @param Task
+	 * @param ITask
 	 *            task
 	 * @return long taskid
 	 */
 	@Deprecated
-	public Task add(Task parent, Task task);
+	public ITask add(ITask parent, ITask task);
 
 	/**
 	 * Return the Task with the specified taskid.
 	 * 
 	 * @param taskid
 	 */
-	public Task get(long taskid);
+	public ITask get(long taskid);
 
 	/**
 	 * Delete all tasks in the database. Caution!!!
@@ -67,6 +67,6 @@ public interface TaskManager {
 	 * @param task
 	 * @return long
 	 */
-	public long delete(Task task);
+	public long delete(ITask task);
 	
 }

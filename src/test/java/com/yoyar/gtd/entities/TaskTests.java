@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.ITask;
 import com.yoyar.gtd.entities.TaskFactory;
-import com.yoyar.gtd.entities.TaskImpl;
+import com.yoyar.gtd.entities.Task;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:com/yoyar/gtd/internal/system-test-config.xml")
@@ -32,20 +32,20 @@ public class TaskTests {
 
 		String title = "Test Task 1";
 
-		Task task = taskFactory.makeTask(title);
+		ITask task = taskFactory.makeTask(title);
 
-		assertTrue(task instanceof Task);
+		assertTrue(task instanceof ITask);
 		assertEquals(title, task.getTitle());
 
-		Task task2 = taskFactory.makeTask(title);
-		assertTrue(task2 instanceof Task);
+		ITask task2 = taskFactory.makeTask(title);
+		assertTrue(task2 instanceof ITask);
 		assertEquals(title, task.getTitle());
 	}
 	
 	@Test
 	public void testEquals() {
-		Task task1 = getTask1();
-		Task task2 = getTask2();
+		ITask task1 = getTask1();
+		ITask task2 = getTask2();
 		assertEquals(task1, task2);
 	}
 	
@@ -56,13 +56,13 @@ public class TaskTests {
 	
 	@Test(expected=IllegalArgumentException.class) 
 	public void testSetNullTitle() {
-		Task task1 = getTask1();
+		ITask task1 = getTask1();
 		task1.setTitle(null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
 	public void testSetNullStringTitle() {
-		Task task1 = getTask1();
+		ITask task1 = getTask1();
 		task1.setTitle("");
 	}
 		
@@ -92,17 +92,17 @@ public class TaskTests {
 	 * same title and due date for testing purposes. In other words, the 
 	 * properties of each should be equal.
 	 */
-	Task getTask1() {
+	ITask getTask1() {
 		
-		Task task1 = new TaskImpl();
+		ITask task1 = new Task();
 		task1.setTitle(title);
 		task1.setDueDate(aDueDate.getTime());
 		
 		return task1;
 	}
 	
-	Task getTask2() {
-		Task task2 = new TaskImpl();
+	ITask getTask2() {
+		ITask task2 = new Task();
 		task2.setTitle(title);
 		task2.setDueDate(aDueDate.getTime());
 		return task2;

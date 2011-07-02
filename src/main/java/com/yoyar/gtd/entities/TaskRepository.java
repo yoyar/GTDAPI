@@ -9,9 +9,9 @@ public interface TaskRepository {
 
 	public void setSessionFactory(SessionFactory sessionFactory);
 	
-	public Task addOrUpdate(Task task);
+	public ITask addOrUpdate(ITask task);
 	
-	public Task get(long taskid);
+	public ITask get(long taskid);
 
 	/**
 	 * Delete the specified task.
@@ -19,7 +19,7 @@ public interface TaskRepository {
 	 * @param task
 	 * @return long
 	 */
-	public long delete(Task task);
+	public long delete(ITask task);
 	
 	/**
 	 * Delete the task with the specified task id.
@@ -40,13 +40,13 @@ public interface TaskRepository {
 	 * 
 	 * @return List&lt;Task&gt;
 	 */
-	public List<Task> getTasks();
+	public List<ITask> getTasks();
 	
 	/**
 	 * For the specified parent Task return the list of sub tasks
 	 * 
-	 * @param Task
+	 * @param ITask
 	 * @return List&lt;Task&gt;
 	 */
-	public List<Task> getTasks(Task parentTask);
+	public List<ITask> getTasks(ITask parentTask);
 }

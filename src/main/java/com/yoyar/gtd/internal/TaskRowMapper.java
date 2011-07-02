@@ -10,17 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.ITask;
 import com.yoyar.gtd.entities.TaskFactory;
 
 @Component("taskRowMapper")
-class TaskRowMapper implements RowMapper<Task> {
+class TaskRowMapper implements RowMapper<ITask> {
 	
 	@Autowired
 	private TaskFactory taskFactory;
 	
 	@Override
-	public Task mapRow(ResultSet rs, int rowNum)
+	public ITask mapRow(ResultSet rs, int rowNum)
 			throws SQLException {
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
@@ -44,7 +44,7 @@ class TaskRowMapper implements RowMapper<Task> {
 			throw new RuntimeException("Unable to parse date.");
 		}
 
-		Task task = taskFactory.makeTask(rs.getString("title"));
+		ITask task = taskFactory.makeTask(rs.getString("title"));
 		task.setId(rs.getLong("taskid"));
 		//task.setParentId((Long)rs.getObject("parentid"));
 		task.setDueDate(dueDate);

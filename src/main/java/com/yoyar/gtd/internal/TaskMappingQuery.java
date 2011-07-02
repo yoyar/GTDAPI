@@ -12,13 +12,13 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.stereotype.Component;
 
-import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.ITask;
 
 @Component("taskMappingQuery")
-class TaskMappingQuery extends MappingSqlQuery<Task> {
+class TaskMappingQuery extends MappingSqlQuery<ITask> {
 	
 	@Autowired
-	RowMapper<Task> taskRowMapper;
+	RowMapper<ITask> taskRowMapper;
 	
 	@Autowired
 	public TaskMappingQuery(DataSource dataSource) {
@@ -31,7 +31,7 @@ class TaskMappingQuery extends MappingSqlQuery<Task> {
 		compile();
 	}
 	
-	protected Task mapRow(ResultSet rs, int rowNumber) throws SQLException {
+	protected ITask mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		return taskRowMapper.mapRow(rs, rowNumber);
 	}
 }

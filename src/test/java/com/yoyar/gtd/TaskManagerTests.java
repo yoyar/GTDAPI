@@ -20,7 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yoyar.gtd.entities.Task;
+import com.yoyar.gtd.entities.ITask;
 import com.yoyar.gtd.entities.TaskFactory;
 import com.yoyar.gtd.internal.Priority;
 import com.yoyar.gtd.util.GtdDateUtil;
@@ -43,7 +43,7 @@ public class TaskManagerTests {
 	public void setUp() throws Exception {
 
 		 for (int i = 0; i < 20; i++) {
-			 Task t = taskFactory.makeTask("Task " + i);
+			 ITask t = taskFactory.makeTask("Task " + i);
 			 taskManager.saveOrUpdate(t);
 		 }
 		
@@ -66,7 +66,7 @@ public class TaskManagerTests {
 
 		long taskid = 1L;
 
-		Task task = taskManager.get(taskid);
+		ITask task = taskManager.get(taskid);
 
 		assertEquals(Long.valueOf(1), task.getId());
 		assertEquals("test task 1", task.getTitle());
@@ -77,7 +77,7 @@ public class TaskManagerTests {
 
 		String title = "task to delete";
 
-		Task task = taskFactory.makeTask(title);
+		ITask task = taskFactory.makeTask(title);
 
 		taskManager.saveOrUpdate(task);
 
@@ -93,7 +93,7 @@ public class TaskManagerTests {
 	@Test
 	public void testCreateTaskWithAllFieldsFilledIn() {
 
-		Task parent = taskFactory.makeTask("parent task");
+		ITask parent = taskFactory.makeTask("parent task");
 		taskManager.saveOrUpdate(parent);
 
 		Calendar dueDate = Calendar.getInstance();
@@ -106,7 +106,7 @@ public class TaskManagerTests {
 
 		String originalTitle = "original task";
 
-		Task originalTask = taskFactory.makeTask(originalTitle);
+		ITask originalTask = taskFactory.makeTask(originalTitle);
 		originalTask.setDueDate(dueDate);
 		
 		originalTask.setPriority(p);
@@ -117,7 +117,7 @@ public class TaskManagerTests {
 		Long originalTaskID = originalTask.getId();
 		assertNotNull(originalTaskID);
 
-		Task taskFromDb = taskManager.get(originalTask.getId());
+		ITask taskFromDb = taskManager.get(originalTask.getId());
 
 		Calendar ddCalendarFromDb = Calendar.getInstance();
 		ddCalendarFromDb.setTime(taskFromDb.getDueDate());
@@ -140,8 +140,8 @@ public class TaskManagerTests {
 		String parentTaskTitle = "parent task title";
 		String subTaskTitle = "sub task title";
 
-		Task parentTask = taskFactory.makeTask(parentTaskTitle);
-		Task subTask = taskFactory.makeTask(subTaskTitle);
+		ITask parentTask = taskFactory.makeTask(parentTaskTitle);
+		ITask subTask = taskFactory.makeTask(subTaskTitle);
 		
 		parentTask.add(subTask);
 		
@@ -153,9 +153,9 @@ public class TaskManagerTests {
 		
 		assertEquals(subTask.getParent(), parentTask);
 		
-		Task parentFromDb = taskManager.get(parentTask.getId());
+		ITask parentFromDb = taskManager.get(parentTask.getId());
 		
-		Task subTaskFromDb = parentFromDb.getTasks().get(0);
+		ITask subTaskFromDb = parentFromDb.getTasks().get(0);
 		
 		assertNotNull(subTaskFromDb);
 		assertEquals(subTaskTitle, subTaskFromDb.getTitle());
@@ -169,8 +169,8 @@ public class TaskManagerTests {
 		String parentTaskTitle = "parent task title";
 		String subTaskTitle = "sub task title";
 
-		Task parentTask = taskFactory.makeTask(parentTaskTitle);
-		Task subTask = taskFactory.makeTask(subTaskTitle);
+		ITask parentTask = taskFactory.makeTask(parentTaskTitle);
+		ITask subTask = taskFactory.makeTask(subTaskTitle);
 		
 		parentTask.add(subTask);
 		taskManager.saveOrUpdate(parentTask);
@@ -190,15 +190,15 @@ public class TaskManagerTests {
 	@Test
 	public void deleteAllIncludingTasksThatHaveSubTasks() {
 		
-		Task parent = taskFactory.makeTask("parent");
-		Task subtask = taskFactory.makeTask("sub task");
+		ITask parent = taskFactory.makeTask("parent");
+		ITask subtask = taskFactory.makeTask("sub task");
 
 		parent.add(subtask);
 		
 		taskManager.saveOrUpdate(parent);
 		
-		Task parentFromDB = taskManager.get(parent.getId());
-		Task subtaskFromDB = taskManager.get(subtask.getId());
+		ITask parentFromDB = taskManager.get(parent.getId());
+		ITask subtaskFromDB = taskManager.get(subtask.getId());
 
 		assertNotNull(parent.getId());
 
@@ -213,7 +213,7 @@ public class TaskManagerTests {
 		Session session = sessionFactory.getCurrentSession();
 		
 		long count = (Long)session.createQuery(
-				"select count(*) from TaskImpl").uniqueResult();
+				"select count(*) from Task").uniqueResult();
 		
 		assertEquals(0, count);
 
@@ -225,7 +225,7 @@ public class TaskManagerTests {
 
 		long taskid = taskManager.getTasks().iterator().next().getId();
 
-		Task originalTask = taskManager.get(taskid);
+		ITask originalTask = taskManager.get(taskid);
 		String origTaskTitle = originalTask.getTitle();
 
 		String updatedTitle = "updated title for task 1";
@@ -237,7 +237,7 @@ public class TaskManagerTests {
 
 		taskManager.saveOrUpdate(originalTask);
 
-		Task taskFromDbAfterUpdate = taskManager.get(taskid);
+		ITask taskFromDbAfterUpdate = taskManager.get(taskid);
 		
 		assertFalse(origTaskTitle.equals(taskFromDbAfterUpdate.getTitle()));
 		
@@ -258,11 +258,11 @@ public class TaskManagerTests {
 		Priority originalPriority = Priority.LOW;
 
 		String title = "test task with priority";
-		Task task = taskFactory.makeTask(title);
+		ITask task = taskFactory.makeTask(title);
 		task.setPriority(originalPriority);
 		taskManager.saveOrUpdate(task);
 
-		Task fromdb = taskManager.get(task.getId());
+		ITask fromdb = taskManager.get(task.getId());
 
 		assertEquals(fromdb.getPriority(), originalPriority);
 
@@ -276,12 +276,12 @@ public class TaskManagerTests {
 		Calendar calOriginal = Calendar.getInstance();
 		calOriginal.set(2011, 1, 1, 12, 1, 1);
 
-		Task task = taskFactory.makeTask(title);
+		ITask task = taskFactory.makeTask(title);
 		task.setDueDate(calOriginal.getTime());
 
 		taskManager.saveOrUpdate(task);
 
-		Task fromDB = taskManager.get(task.getId());
+		ITask fromDB = taskManager.get(task.getId());
 
 		Calendar calFromDB = Calendar.getInstance();
 		calFromDB.setTime(fromDB.getDueDate());
@@ -297,15 +297,15 @@ public class TaskManagerTests {
 		
 		Session session = sessionFactory.getCurrentSession();
 		Query q = session.createQuery(
-				"select count(*) from TaskImpl"
+				"select count(*) from Task"
 		);
 		
 		taskManager.delete();
 		
 		assertEquals(0L, q.uniqueResult());
 		
-		Task t1 = taskFactory.makeTask("t1");
-		Task t2 = taskFactory.makeTask("t2");
+		ITask t1 = taskFactory.makeTask("t1");
+		ITask t2 = taskFactory.makeTask("t2");
 
 		taskManager.saveOrUpdate(t1);
 		taskManager.saveOrUpdate(t2);
@@ -322,14 +322,14 @@ public class TaskManagerTests {
 
 		String title = "Test Task 1a";
 
-		Task originalTask = taskFactory.makeTask(title);
+		ITask originalTask = taskFactory.makeTask(title);
 		taskManager.saveOrUpdate(originalTask);
 
 		assertNotNull(originalTask.getId());
 
 		Long taskid = originalTask.getId();
 
-		Task taskFromDB = taskManager.get(originalTask.getId());
+		ITask taskFromDB = taskManager.get(originalTask.getId());
 
 		assertEquals(title, taskFromDB.getTitle());
 		assertEquals(taskid, taskFromDB.getId());

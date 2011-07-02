@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component("taskFactory")
 public class BasicTaskFactory implements TaskFactory {
 
-	public Task makeTask(String title) {
+	public ITask makeTask(String title) {
 		
 		if( title == null || title == "") {
 			throw new IllegalArgumentException(
@@ -17,7 +17,7 @@ public class BasicTaskFactory implements TaskFactory {
 			);
 		}
 		
-		Task task = new TaskImpl();
+		ITask task = new Task();
 		task.setTitle(title);
 		return task;
 	}
