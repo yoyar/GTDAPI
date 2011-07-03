@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component("taskFactory")
 public class BasicTaskFactory implements TaskFactory {
 
-	public ITask makeTask(String title) {
+	public Task makeTask(String title) {
 		
 		if( title == null || title == "") {
 			throw new IllegalArgumentException(
@@ -17,8 +17,19 @@ public class BasicTaskFactory implements TaskFactory {
 			);
 		}
 		
-		ITask task = new Task();
+
+		Task task = new Task();
 		task.setTitle(title);
+		
+		
+		task.setPriority(PriorityEnum.LOW.getPriorityDAO());
+		
+//		Priority p = (Priority) getCurrentSession().get(
+//			Priority.class, PriorityEnum.LOW.toString()
+//		);
+//		task.setPriority(p);
+		
+		
 		return task;
 	}
 }

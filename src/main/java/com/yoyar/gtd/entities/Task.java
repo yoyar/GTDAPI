@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,41 +21,53 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-
 @javax.persistence.Entity
 @Table(name = "Task")
 @javax.persistence.SequenceGenerator(name = "gtd_taskid_seq", allocationSize = 1)
-class Task implements ITask {
+public
+class Task {
 
 	@Id
-	@Column(name = "taskid")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "gtd_taskid_seq")
 	private Long taskid = null;
 
 	@OneToMany(
-			targetEntity=Task.class, 
-			mappedBy="taskid", 
 			cascade=CascadeType.ALL,
-			fetch=FetchType.LAZY
+			fetch=FetchType.LAZY,
+			mappedBy="parent_taskid",
+			targetEntity=Task.class
 	)
-	
-	private List<ITask> tasks = new ArrayList<ITask>();
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private List<Task> tasks = new ArrayList<Task>();
 
 	@SuppressWarnings("unused")
 	@Column(insertable=false, updatable=false)
 	private Long parent_taskid;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = Task.class)
-	@JoinColumn(insertable = true, name = "parent_taskid", nullable = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private ITask parent;
+	@JoinColumn(name = "parent_taskid")
+	private Task parent;
 
 	@Column(name = "title", nullable=false)
 	private String title;
 
-	@Column(name = "priorityid")
-	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "notes", nullable=true)
+	private String notes;
+	
+	@ManyToOne(
+		fetch=FetchType.EAGER,
+		optional=false,
+		targetEntity=Priority.class
+	)
+	@JoinColumn(name="priorityid")
 	private Priority priority;
+	
+//	@Column
+//	private String priorityid;
+	
+//	@Column(name = "priorityid")
+//	@Enumerated(EnumType.ORDINAL)
+//	private PriorityEnum priority;
 
 	@Column(name = "duedate")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -70,38 +80,31 @@ class Task implements ITask {
 	public Task() {
 	}
 
-	@Override
 	public Long getId() {
 		return taskid;
 	}
 
-	@Override
-	public ITask getParent() {
+	public Task getParent() {
 		return parent;
 	}
 
-	@Override
-	public void setParent(ITask parent) {
+	public void setParent(Task parent) {
 		this.parent = parent;
 	}
 
-	@Override
 	public void setId(long id) {
 		this.taskid = id;
 	}
 
-	@Override
-	public void add(ITask task) {
+	public void add(Task task) {
 		task.setParent(this);
 		this.tasks.add(task);
 	}
 
-	@Override
 	public String getTitle() {
 		return title;
 	}
 
-	@Override
 	public void setTitle(String title) {
 
 		if (null == title || "" == title) {
@@ -111,47 +114,40 @@ class Task implements ITask {
 		this.title = title;
 	}
 
-	@Override
-	public List<ITask> getTasks() {
+	public List<Task> getTasks() {
 		return this.tasks;
 	}
 	
-	@Override
-	public Priority getPriority() {
-		return priority;
-	}
+//	@Override
+//	public PriorityEnum getPriority() {
+//		return priority;
+//	}
+//
+//	@Override
+//	public void setPriority(PriorityEnum priority) {
+//		this.priority = priority;
+//	}
 
-	@Override
-	public void setPriority(Priority priority) {
-		this.priority = priority;
-	}
-
-	@Override
 	public Date getDueDate() {
 		return dueDate;
 	}
 
-	@Override
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
 
-	@Override
 	public Date getCompleted() {
 		return completed;
 	}
 
-	@Override
 	public void setCompleted(Date completed) {
 		this.completed = completed;
 	}
 
-	@Override
 	public void setDueDate(Calendar due) {
 		setDueDate(due.getTime());
 	}
 
-	@Override
 	public void setCompleted(Calendar completed) {
 		setCompleted(completed.getTime());
 	}
@@ -178,7 +174,7 @@ class Task implements ITask {
 			return true;
 		if ((obj == null) || (obj.getClass() != this.getClass()))
 			return false;
-		ITask other = (ITask) obj;
+		Task other = (Task) obj;
 		return this.getTitle().equals(other.getTitle());
 	}
 
@@ -187,6 +183,22 @@ class Task implements ITask {
 		int hash = 7;
 		hash = 31 * hash + getTitle().hashCode();
 		return hash;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setPriority(Priority priority) {
+		this.priority = priority;
+	}
+
+	public Priority getPriority() {
+		return priority;
 	}
 
 }

@@ -9,5 +9,5 @@ public interface TaskFactory {
 	 * @param title
 	 * @return Task
 	 */
-	public ITask makeTask(String title);
+	public Task makeTask(String title);
 }

@@ -1,4 +1,4 @@
-package com.yoyar.gtd.entities;
+package com.yoyar.gtd.repositories;
 
 import java.util.List;
 
@@ -6,6 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.yoyar.gtd.entities.Priority;
+import com.yoyar.gtd.entities.PriorityEnum;
+import com.yoyar.gtd.entities.Task;
 
 @Repository("taskRepository")
 class HibernateTaskRepositoryImpl implements TaskRepository {
@@ -16,20 +20,21 @@ class HibernateTaskRepositoryImpl implements TaskRepository {
 	private Session getCurrentSession() {
 		return this.sessionFactory.getCurrentSession();
 	}
-
+	
 	@Override
-	public ITask saveOrUpdate(ITask task) {
+	public Task saveOrUpdate(Task task) {
+				
 		getCurrentSession().saveOrUpdate(task);
 		return task;
 	}
 
 	@Override
-	public ITask get(long taskid) {
-		return (ITask) getCurrentSession().get(Task.class, taskid);
+	public Task get(long taskid) {
+		return (Task) getCurrentSession().get(Task.class, taskid);
 	}
 
 	@Override
-	public long delete(ITask task) {
+	public long delete(Task task) {
 		long taskid = task.getId();
 		getCurrentSession().delete(task);
 		return taskid;
@@ -46,8 +51,8 @@ class HibernateTaskRepositoryImpl implements TaskRepository {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ITask> getTasks() {
-		return (List<ITask>)getCurrentSession().createQuery(
+	public List<Task> getTasks() {
+		return (List<Task>)getCurrentSession().createQuery(
 			"from Task t where t.parent_taskid is null"
 		).list();
 	}

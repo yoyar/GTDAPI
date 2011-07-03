@@ -1,12 +1,14 @@
-package com.yoyar.gtd.entities;
+package com.yoyar.gtd.repositories;
 
 import java.util.List;
 
+import com.yoyar.gtd.entities.Task;
+
 public interface TaskRepository {
 	
-	public ITask saveOrUpdate(ITask task);
+	public Task saveOrUpdate(Task task);
 	
-	public ITask get(long taskid);
+	public Task get(long taskid);
 
 	/**
 	 * Delete the specified task.
@@ -14,7 +16,7 @@ public interface TaskRepository {
 	 * @param task
 	 * @return long
 	 */
-	public long delete(ITask task);
+	public long delete(Task task);
 	
 	/**
 	 * Delete ALL tasks
@@ -27,5 +29,5 @@ public interface TaskRepository {
 	 * 
 	 * @return List&lt;Task&gt;
 	 */
-	public List<ITask> getTasks();	
+	public List<Task> getTasks();	
 }
