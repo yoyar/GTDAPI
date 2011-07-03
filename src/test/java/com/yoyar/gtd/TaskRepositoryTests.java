@@ -35,7 +35,7 @@ import com.yoyar.gtd.util.GtdDateUtil;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:com/yoyar/gtd/internal/system-test-config.xml")
 @Transactional
-public class TaskManagerTests {
+public class TaskRepositoryTests {
 
 	@Autowired
 	TaskRepository taskRepository;
