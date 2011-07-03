@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.yoyar.gtd.internal.Priority;
 
 public interface ITask {
 

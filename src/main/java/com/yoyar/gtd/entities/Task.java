@@ -23,7 +23,6 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.yoyar.gtd.internal.Priority;
 
 @javax.persistence.Entity
 @Table(name = "Task")
