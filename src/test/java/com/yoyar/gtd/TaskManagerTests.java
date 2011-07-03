@@ -11,11 +11,17 @@ import java.util.Calendar;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,23 +41,41 @@ public class TaskManagerTests {
 
 	@Autowired
 	private TaskFactory taskFactory;
-	
+
 	@Autowired
 	SessionFactory sessionFactory;
+
+	@BeforeClass
+	public static void before() {
+		
+		ApplicationContext context = new ClassPathXmlApplicationContext(
+			"com/yoyar/gtd/internal/system-test-config.xml"
+		);
+
+		LocalSessionFactoryBean bean = (LocalSessionFactoryBean) context
+				.getBean("&sessionFactory");
+
+		Configuration configuration = bean.getConfiguration();
+
+		SchemaExport export = new SchemaExport(configuration);
+		export.setOutputFile("gtd.sql");
+		export.setDelimiter(";");
+		export.execute(true, false, false, true);
+	}
 
 	@Before
 	public void setUp() throws Exception {
 
-		 for (int i = 0; i < 20; i++) {
-			 ITask t = taskFactory.makeTask("Task " + i);
-			 taskManager.saveOrUpdate(t);
-		 }
-		
-//		 Collection<Task> tasks = taskManager.getTasks();
-//		
-//		 for( Task task : tasks) {
-//			 //	System.out.println(task);
-//		 }
+		// for (int i = 0; i < 20; i++) {
+		// ITask t = taskFactory.makeTask("Task " + i);
+		// taskManager.saveOrUpdate(t);
+		// }
+
+		// Collection<Task> tasks = taskManager.getTasks();
+		//
+		// for( Task task : tasks) {
+		// // System.out.println(task);
+		// }
 	}
 
 	@After
@@ -108,7 +132,7 @@ public class TaskManagerTests {
 
 		ITask originalTask = taskFactory.makeTask(originalTitle);
 		originalTask.setDueDate(dueDate);
-		
+
 		originalTask.setPriority(p);
 		originalTask.setCompleted(completedDate);
 
@@ -126,43 +150,44 @@ public class TaskManagerTests {
 		cdCalendarFromDb.setTime(taskFromDb.getCompleted());
 
 		assertTrue(GtdDateUtil.calendarsAreEqual(dueDate, ddCalendarFromDb));
-		assertTrue(GtdDateUtil.calendarsAreEqual(completedDate, cdCalendarFromDb));
+		assertTrue(GtdDateUtil.calendarsAreEqual(completedDate,
+				cdCalendarFromDb));
 		assertEquals(originalTitle, taskFromDb.getTitle());
 		assertEquals(p, taskFromDb.getPriority());
-		
+
 		assertEquals(originalTaskID, taskFromDb.getId());
 
 	}
 
 	@Test
 	public void testGetParent() {
-		
+
 		String parentTaskTitle = "parent task title";
 		String subTaskTitle = "sub task title";
 
 		ITask parentTask = taskFactory.makeTask(parentTaskTitle);
 		ITask subTask = taskFactory.makeTask(subTaskTitle);
-		
+
 		parentTask.add(subTask);
-		
+
 		taskManager.saveOrUpdate(parentTask);
-		
+
 		assertNotNull(parentTask.getId());
 		assertNotNull(subTask.getId());
 		assertNotNull(subTask.getParent());
-		
+
 		assertEquals(subTask.getParent(), parentTask);
-		
+
 		ITask parentFromDb = taskManager.get(parentTask.getId());
-		
+
 		ITask subTaskFromDb = parentFromDb.getTasks().get(0);
-		
+
 		assertNotNull(subTaskFromDb);
 		assertEquals(subTaskTitle, subTaskFromDb.getTitle());
 		assertEquals(parentTaskTitle, parentFromDb.getTitle());
-		
+
 	}
-	
+
 	@Test
 	public void testAddSubTaskToParentTask() {
 
@@ -171,32 +196,32 @@ public class TaskManagerTests {
 
 		ITask parentTask = taskFactory.makeTask(parentTaskTitle);
 		ITask subTask = taskFactory.makeTask(subTaskTitle);
-		
+
 		parentTask.add(subTask);
 		taskManager.saveOrUpdate(parentTask);
-		
+
 		Long parentTaskId = parentTask.getId();
 		Long subTaskId = subTask.getId();
-		
+
 		assertNotNull(parentTaskId);
 		assertNotNull(subTaskId);
-		
+
 		assertEquals(parentTask, subTask.getParent());
-		
+
 		assertEquals(parentTask.getTasks().get(0), subTask);
-		
+
 	}
-	
+
 	@Test
 	public void deleteAllIncludingTasksThatHaveSubTasks() {
-		
+
 		ITask parent = taskFactory.makeTask("parent");
 		ITask subtask = taskFactory.makeTask("sub task");
 
 		parent.add(subtask);
-		
+
 		taskManager.saveOrUpdate(parent);
-		
+
 		ITask parentFromDB = taskManager.get(parent.getId());
 		ITask subtaskFromDB = taskManager.get(subtask.getId());
 
@@ -211,12 +236,11 @@ public class TaskManagerTests {
 		taskManager.delete();
 
 		Session session = sessionFactory.getCurrentSession();
-		
-		long count = (Long)session.createQuery(
-				"select count(*) from Task").uniqueResult();
-		
-		assertEquals(0, count);
 
+		long count = (Long) session.createQuery("select count(*) from Task")
+				.uniqueResult();
+
+		assertEquals(0, count);
 
 	}
 
@@ -238,18 +262,16 @@ public class TaskManagerTests {
 		taskManager.saveOrUpdate(originalTask);
 
 		ITask taskFromDbAfterUpdate = taskManager.get(taskid);
-		
+
 		assertFalse(origTaskTitle.equals(taskFromDbAfterUpdate.getTitle()));
-		
+
 		// hibernate updates the original task as well as the updated task obj
 		assertTrue(originalTask.equals(taskFromDbAfterUpdate));
-		
+
 		assertEquals(updatedTitle, taskFromDbAfterUpdate.getTitle());
-		
-		assertTrue(GtdDateUtil.datesAreEqual(
-				updatedDueDate.getTime(), 
-				taskFromDbAfterUpdate.getDueDate()
-		));
+
+		assertTrue(GtdDateUtil.datesAreEqual(updatedDueDate.getTime(),
+				taskFromDbAfterUpdate.getDueDate()));
 	}
 
 	@Test
@@ -290,20 +312,16 @@ public class TaskManagerTests {
 
 	}
 
-	
-	
 	@Test
 	public void testDeleteAll() {
-		
+
 		Session session = sessionFactory.getCurrentSession();
-		Query q = session.createQuery(
-				"select count(*) from Task"
-		);
-		
+		Query q = session.createQuery("select count(*) from Task");
+
 		taskManager.delete();
-		
+
 		assertEquals(0L, q.uniqueResult());
-		
+
 		ITask t1 = taskFactory.makeTask("t1");
 		ITask t2 = taskFactory.makeTask("t2");
 
@@ -311,9 +329,9 @@ public class TaskManagerTests {
 		taskManager.saveOrUpdate(t2);
 
 		assertEquals(2L, q.uniqueResult());
-		
+
 		taskManager.delete();
-		
+
 		assertEquals(0L, q.uniqueResult());
 	}
 

@@ -22,6 +22,8 @@
 				<prop key="hibernate.cache.use_query_cache">false</prop>
 				<prop key="hibernate.cache.use_second_level_cache">false</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+				<prop key="hibernate.hbm2ddl.import_files">com/yoyar/gtd/testdb/test-data.sql</prop>
 			</props>
 		</property>
 	</bean>

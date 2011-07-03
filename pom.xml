@@ -10,7 +10,7 @@
 		<org.springframework.version>3.0.4.RELEASE</org.springframework.version>
 		<junit.version>4.7</junit.version>
 		<aspectj.version>1.6.8</aspectj.version>
-		<hibernate.version>3.5.1-Final</hibernate.version>
+		<hibernate.version>3.6.5.Final</hibernate.version>
 		<jpa.version>1.0</jpa.version>
 	</properties>
 
@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-annotations</artifactId>
-			<version>${hibernate.version}</version>
+			<version>3.4.0.GA</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>

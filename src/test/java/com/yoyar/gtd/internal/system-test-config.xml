@@ -10,10 +10,9 @@
 	<import resource="classpath:com/yoyar/gtd/internal/application-config.xml" />
 
 	<jdbc:embedded-database id="dataSource">
-		<jdbc:script location="classpath:com/yoyar/gtd/testdb/schema.sql" />
-		<jdbc:script location="classpath:com/yoyar/gtd/testdb/test-data.sql" />
+		<!-- Note: scripts are run via the hibernate config now. -->
 	</jdbc:embedded-database>
 	
-	<import resource="classpath:com/yoyar/gtd/internal/hibernate-based-datasource-config.xml" />
+	<import resource="classpath:com/yoyar/gtd/internal/hibernate-config.xml" />
 	
 </beans>

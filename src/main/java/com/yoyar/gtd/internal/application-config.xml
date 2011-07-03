@@ -12,5 +12,7 @@
     
     <context:component-scan base-package="com.yoyar.gtd" />
 	
+	<tx:annotation-driven/>
+	
 </beans>
 

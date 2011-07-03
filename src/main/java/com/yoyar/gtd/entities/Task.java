@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,7 +28,6 @@ import com.yoyar.gtd.internal.Priority;
 @javax.persistence.Entity
 @Table(name = "Task")
 @javax.persistence.SequenceGenerator(name = "gtd_taskid_seq", allocationSize = 1)
-@OnDelete(action = OnDeleteAction.CASCADE)
 class Task implements ITask {
 
 	@Id
@@ -34,21 +36,24 @@ class Task implements ITask {
 	private Long taskid = null;
 
 	@OneToMany(
-			targetEntity = Task.class, 
-			cascade = javax.persistence.CascadeType.ALL, 
-			orphanRemoval = true
-			)
+			targetEntity=Task.class, 
+			mappedBy="taskid", 
+			cascade=CascadeType.ALL,
+			fetch=FetchType.LAZY
+	)
+	
 	private List<ITask> tasks = new ArrayList<ITask>();
 
 	@SuppressWarnings("unused")
-	@Column(insertable = false, updatable = false)
+	@Column(insertable=false, updatable=false)
 	private Long parent_taskid;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = Task.class)
 	@JoinColumn(insertable = true, name = "parent_taskid", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private ITask parent;
 
-	@Column(name = "title")
+	@Column(name = "title", nullable=false)
 	private String title;
 
 	@Column(name = "priorityid")
@@ -56,9 +61,11 @@ class Task implements ITask {
 	private Priority priority;
 
 	@Column(name = "duedate")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dueDate;
 
 	@Column(name = "completed")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date completed;
 
 	public Task() {
@@ -105,6 +112,11 @@ class Task implements ITask {
 		this.title = title;
 	}
 
+	@Override
+	public List<ITask> getTasks() {
+		return this.tasks;
+	}
+	
 	@Override
 	public Priority getPriority() {
 		return priority;
@@ -178,8 +190,4 @@ class Task implements ITask {
 		return hash;
 	}
 
-	@Override
-	public List<ITask> getTasks() {
-		return this.tasks;
-	}
 }
