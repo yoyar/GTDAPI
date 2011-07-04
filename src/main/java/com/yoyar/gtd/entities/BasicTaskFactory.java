@@ -1,6 +1,9 @@
 package com.yoyar.gtd.entities;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.yoyar.gtd.repositories.PriorityRepository;
 
 
 /**
@@ -9,6 +12,9 @@ import org.springframework.stereotype.Component;
 @Component("taskFactory")
 public class BasicTaskFactory implements TaskFactory {
 
+	@Autowired
+	PriorityRepository priorityRepository;
+	
 	public Task makeTask(String title) {
 		
 		if( title == null || title == "") {
@@ -16,19 +22,13 @@ public class BasicTaskFactory implements TaskFactory {
 					"When creating a Task the title cannot be null."
 			);
 		}
-		
 
 		Task task = new Task();
 		task.setTitle(title);
 		
-		
-		task.setPriority(PriorityEnum.LOW.getPriorityDAO());
-		
-//		Priority p = (Priority) getCurrentSession().get(
-//			Priority.class, PriorityEnum.LOW.toString()
-//		);
-//		task.setPriority(p);
-		
+		task.setPriority(
+				priorityRepository.get(Priority.TYPE.LOW)
+		);
 		
 		return task;
 	}

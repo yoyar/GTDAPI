@@ -24,8 +24,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @javax.persistence.Entity
 @Table(name = "Task")
 @javax.persistence.SequenceGenerator(name = "gtd_taskid_seq", allocationSize = 1)
-public
-class Task {
+public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "gtd_taskid_seq")
@@ -62,13 +61,6 @@ class Task {
 	@JoinColumn(name="priorityid")
 	private Priority priority;
 	
-//	@Column
-//	private String priorityid;
-	
-//	@Column(name = "priorityid")
-//	@Enumerated(EnumType.ORDINAL)
-//	private PriorityEnum priority;
-
 	@Column(name = "duedate")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dueDate;
@@ -118,16 +110,6 @@ class Task {
 		return this.tasks;
 	}
 	
-//	@Override
-//	public PriorityEnum getPriority() {
-//		return priority;
-//	}
-//
-//	@Override
-//	public void setPriority(PriorityEnum priority) {
-//		this.priority = priority;
-//	}
-
 	public Date getDueDate() {
 		return dueDate;
 	}

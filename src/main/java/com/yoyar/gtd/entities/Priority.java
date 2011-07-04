@@ -2,15 +2,9 @@ package com.yoyar.gtd.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Immutable;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity(name="Priority")
 @Immutable
@@ -28,6 +22,16 @@ public class Priority {
 
 	@Column
 	private int sortorder;
+	
+	/**
+	 * These match the IDs of of each priority stored in the database.
+	 */
+	static public enum TYPE {
+		TOP,
+		HIGH,
+		MEDIUM,
+		LOW;
+	}
 	
 	public void setId(String id) {
 		this.priorityid = id;

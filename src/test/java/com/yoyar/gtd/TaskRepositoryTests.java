@@ -26,8 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yoyar.gtd.entities.Priority;
 import com.yoyar.gtd.entities.Task;
-import com.yoyar.gtd.entities.PriorityEnum;
 import com.yoyar.gtd.entities.TaskFactory;
 import com.yoyar.gtd.repositories.TaskRepository;
 import com.yoyar.gtd.util.GtdDateUtil;
@@ -46,24 +46,23 @@ public class TaskRepositoryTests {
 	@Autowired
 	SessionFactory sessionFactory;
 
-	@BeforeClass
-	public static void before() {
-		
-		ApplicationContext context = new ClassPathXmlApplicationContext(
-			"com/yoyar/gtd/internal/system-test-config.xml"
-		);
+	@Autowired
+	Configuration hibernateConfig;
 
-		LocalSessionFactoryBean bean = (LocalSessionFactoryBean) context
-				.getBean("&sessionFactory");
-
-		Configuration configuration = bean.getConfiguration();
-
-		SchemaExport export = new SchemaExport(configuration);
+	@Test
+	public void testHibernateConfigInjection() {
+		assertNotNull(hibernateConfig);
+		assertTrue(hibernateConfig instanceof Configuration);
+	}
+	
+	@Test
+	public void runSchemaGeneration() {
+		SchemaExport export = new SchemaExport(hibernateConfig);
 		export.setOutputFile("gtd.sql");
 		export.setDelimiter(";");
 		export.execute(true, false, false, true);
 	}
-
+	
 	@Before
 	public void setUp() throws Exception {
 
@@ -129,7 +128,7 @@ public class TaskRepositoryTests {
 		Calendar completedDate = Calendar.getInstance();
 		completedDate.set(2011, 11, 28, 1, 1, 1);
 
-		PriorityEnum p = PriorityEnum.HIGH;
+		Priority.TYPE p = Priority.TYPE.HIGH;
 
 		String originalTitle = "original task";
 
@@ -280,7 +279,11 @@ public class TaskRepositoryTests {
 	@Test
 	public void testAddTaskWithPriority() {
 
-		PriorityEnum originalPriority = PriorityEnum.LOW;
+		
+		// TODO fix Priority tests
+		
+		
+		Priority.TYPE originalPriority = Priority.TYPE.LOW;
 
 		String title = "test task with priority";
 		Task task = taskFactory.makeTask(title);

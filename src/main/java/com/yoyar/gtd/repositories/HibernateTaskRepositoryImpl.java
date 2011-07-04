@@ -7,8 +7,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.yoyar.gtd.entities.Priority;
-import com.yoyar.gtd.entities.PriorityEnum;
 import com.yoyar.gtd.entities.Task;
 
 @Repository("taskRepository")
