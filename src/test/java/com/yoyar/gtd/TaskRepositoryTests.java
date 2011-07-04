@@ -47,17 +47,17 @@ public class TaskRepositoryTests {
 	SessionFactory sessionFactory;
 
 	@Autowired
-	Configuration hibernateConfig;
+	Configuration hibernateConfiguration;
 
 	@Test
 	public void testHibernateConfigInjection() {
-		assertNotNull(hibernateConfig);
-		assertTrue(hibernateConfig instanceof Configuration);
+		assertNotNull(hibernateConfiguration);
+		assertTrue(hibernateConfiguration instanceof Configuration);
 	}
 	
 	@Test
 	public void runSchemaGeneration() {
-		SchemaExport export = new SchemaExport(hibernateConfig);
+		SchemaExport export = new SchemaExport(hibernateConfiguration);
 		export.setOutputFile("gtd.sql");
 		export.setDelimiter(";");
 		export.execute(true, false, false, true);

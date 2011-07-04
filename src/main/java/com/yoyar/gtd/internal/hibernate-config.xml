@@ -29,7 +29,7 @@
 		</property>
 	</bean>
 
-	<bean id="hconfiguration" factory-bean="&amp;sessionFactory"
+	<bean id="hibernateConfiguration" factory-bean="&amp;sessionFactory"
 		factory-method="getConfiguration" />
 
 	<bean id="transactionManager"
