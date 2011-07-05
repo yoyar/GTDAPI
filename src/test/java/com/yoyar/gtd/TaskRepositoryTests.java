@@ -15,13 +15,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yoyar.gtd.entities.Priority;
 import com.yoyar.gtd.entities.Task;
 import com.yoyar.gtd.entities.TaskFactory;
+import com.yoyar.gtd.repositories.PriorityRepository;
 import com.yoyar.gtd.repositories.TaskRepository;
 import com.yoyar.gtd.util.GtdDateUtil;
 
@@ -119,7 +116,10 @@ public class TaskRepositoryTests {
 	@Test
 	public void testCreateTaskWithAllFieldsFilledIn() {
 
+		// TODO incomplete
+		
 		Task parent = taskFactory.makeTask("parent task");
+		
 		taskRepository.saveOrUpdate(parent);
 
 		Calendar dueDate = Calendar.getInstance();
@@ -127,8 +127,6 @@ public class TaskRepositoryTests {
 
 		Calendar completedDate = Calendar.getInstance();
 		completedDate.set(2011, 11, 28, 1, 1, 1);
-
-		Priority.TYPE p = Priority.TYPE.HIGH;
 
 		String originalTitle = "original task";
 
@@ -145,11 +143,9 @@ public class TaskRepositoryTests {
 
 		Task taskFromDb = taskRepository.get(originalTask.getId());
 
-		Calendar ddCalendarFromDb = Calendar.getInstance();
-		ddCalendarFromDb.setTime(taskFromDb.getDueDate());
-
-		Calendar cdCalendarFromDb = Calendar.getInstance();
-		cdCalendarFromDb.setTime(taskFromDb.getCompleted());
+		Calendar ddCalendarFromDb = taskFromDb.getDueDate(); 
+		
+		Calendar cdCalendarFromDb = taskFromDb.getCompleted();
 
 		assertTrue(GtdDateUtil.calendarsAreEqual(dueDate, ddCalendarFromDb));
 		assertTrue(GtdDateUtil.calendarsAreEqual(completedDate,
@@ -197,6 +193,7 @@ public class TaskRepositoryTests {
 		String subTaskTitle = "sub task title";
 
 		Task parentTask = taskFactory.makeTask(parentTaskTitle);
+			
 		Task subTask = taskFactory.makeTask(subTaskTitle);
 
 		parentTask.add(subTask);
@@ -259,7 +256,7 @@ public class TaskRepositoryTests {
 		updatedDueDate.set(2012, 11, 19, 1, 1, 1);
 
 		originalTask.setTitle(updatedTitle);
-		originalTask.setDueDate(updatedDueDate.getTime());
+		originalTask.setDueDate(updatedDueDate);
 
 		taskRepository.saveOrUpdate(originalTask);
 
@@ -272,27 +269,31 @@ public class TaskRepositoryTests {
 
 		assertEquals(updatedTitle, taskFromDbAfterUpdate.getTitle());
 
-		assertTrue(GtdDateUtil.datesAreEqual(updatedDueDate.getTime(),
-				taskFromDbAfterUpdate.getDueDate()));
+		assertTrue(GtdDateUtil.calendarsAreEqual(
+				updatedDueDate,
+				taskFromDbAfterUpdate.getDueDate())
+				);
 	}
 
+	@Autowired
+	PriorityRepository priorityRepository;
+	
 	@Test
 	public void testAddTaskWithPriority() {
-
 		
-		// TODO fix Priority tests
+		// TODO consider changing all time fieldsd to varchar and store unix timestamp
 		
+		Priority p = priorityRepository.get(Priority.TYPE.MEDIUM);
 		
-		Priority.TYPE originalPriority = Priority.TYPE.LOW;
-
 		String title = "test task with priority";
 		Task task = taskFactory.makeTask(title);
-		//task.setPriority(originalPriority);
+		task.setPriority(p);
 		taskRepository.saveOrUpdate(task);
 
 		Task fromdb = taskRepository.get(task.getId());
 
-		//assertEquals(fromdb.getPriority(), originalPriority);
+		assertEquals(fromdb.getPriority().getLabel(), p.getLabel());
+		assertEquals(fromdb.getPriority().getId(), p.getId());
 
 	}
 
@@ -305,17 +306,15 @@ public class TaskRepositoryTests {
 		calOriginal.set(2011, 1, 1, 12, 1, 1);
 
 		Task task = taskFactory.makeTask(title);
-		task.setDueDate(calOriginal.getTime());
+		task.setDueDate(calOriginal);
 
 		taskRepository.saveOrUpdate(task);
 
 		Task fromDB = taskRepository.get(task.getId());
-
-		Calendar calFromDB = Calendar.getInstance();
-		calFromDB.setTime(fromDB.getDueDate());
+		
+		Calendar calFromDB = fromDB.getDueDate();
 
 		assertTrue(GtdDateUtil.calendarsAreEqual(calFromDB, calOriginal));
-
 	}
 
 	@Test

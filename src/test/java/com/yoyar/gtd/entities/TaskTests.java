@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration("classpath:com/yoyar/gtd/internal/system-test-config.xml")
 @Transactional
 public class TaskTests {
-
-	@Autowired
-	private TaskFactory taskFactory;
 	
-	@Before
-	public void setUp() throws Exception {
-	}
-		
 	@Test
 	public void testMakeTaskWithTitle() {
 
 		String title = "Test Task 1";
 
-		Task task = taskFactory.makeTask(title);
+		Task task = new Task(title);
 
 		assertTrue(task instanceof Task);
 		assertEquals(title, task.getTitle());
 
-		Task task2 = taskFactory.makeTask(title);
+		Task task2 = new Task(title);
 		assertTrue(task2 instanceof Task);
 		assertEquals(title, task.getTitle());
 	}
@@ -63,7 +55,10 @@ public class TaskTests {
 		Task task1 = getTask1();
 		task1.setTitle("");
 	}
-		
+	
+	@Autowired
+	TaskFactory taskFactory;
+	
 	@Test(expected=IllegalArgumentException.class) 
 	public void testMakeTaskWithNullTitle() {
 		taskFactory.makeTask(null);
@@ -92,17 +87,15 @@ public class TaskTests {
 	 */
 	Task getTask1() {
 		
-		Task task1 = new Task();
-		task1.setTitle(title);
-		task1.setDueDate(aDueDate.getTime());
+		Task task1 = new Task(title);
+		task1.setDueDate(aDueDate);
 		
 		return task1;
 	}
 	
 	Task getTask2() {
-		Task task2 = new Task();
-		task2.setTitle(title);
-		task2.setDueDate(aDueDate.getTime());
+		Task task2 = new Task(title);
+		task2.setDueDate(aDueDate);
 		return task2;
 	}
 

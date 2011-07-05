@@ -2,7 +2,6 @@ package com.yoyar.gtd.entities;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -63,15 +62,25 @@ public class Task {
 	
 	@Column(name = "duedate")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date dueDate;
+	private Calendar dueDate;
 
 	@Column(name = "completed")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date completed;
-
-	public Task() {
+	private Calendar completed;
+		
+	/**
+	 * No one outside of this package can access the constructors. They can
+	 * access the class, however.
+	 * 
+	 * That way, only TaskFactory can create Tasks.
+	 */
+	Task() {
 	}
-
+	
+	Task(String title) {
+		this.title = title;
+	}
+	
 	public Long getId() {
 		return taskid;
 	}
@@ -110,28 +119,20 @@ public class Task {
 		return this.tasks;
 	}
 	
-	public Date getDueDate() {
+	public Calendar getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(Date dueDate) {
+	public void setDueDate(Calendar dueDate) {
 		this.dueDate = dueDate;
 	}
 
-	public Date getCompleted() {
+	public Calendar getCompleted() {
 		return completed;
 	}
 
-	public void setCompleted(Date completed) {
-		this.completed = completed;
-	}
-
-	public void setDueDate(Calendar due) {
-		setDueDate(due.getTime());
-	}
-
 	public void setCompleted(Calendar completed) {
-		setCompleted(completed.getTime());
+		this.completed = completed;
 	}
 
 	@Override
@@ -145,6 +146,8 @@ public class Task {
 
 	/**
 	 * A Task equals another Task when the titles are equal.
+	 * 
+	 * TODO reconsider def'n of equals and hashcode for Task
 	 * 
 	 * @param obj
 	 * @return boolean

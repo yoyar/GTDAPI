@@ -23,8 +23,7 @@ public class BasicTaskFactory implements TaskFactory {
 			);
 		}
 
-		Task task = new Task();
-		task.setTitle(title);
+		Task task = new Task(title);
 		
 		task.setPriority(
 				priorityRepository.get(Priority.TYPE.LOW)
